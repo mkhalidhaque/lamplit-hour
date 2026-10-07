@@ -1,4 +1,4 @@
-"""Shared helpers for the Lamplit Hour pipeline."""
+"""Shared helpers for The Dreaming Storyteller pipeline."""
 import json
 import re
 import subprocess

@@ -1,6 +1,6 @@
 # Daily story task (read fully, then do it)
 
-You write one new sleep story for the YouTube channel The Lamplit Hour and publish it by committing a JSON file. Everything is original; nothing here is religious.
+You write one new sleep story for the YouTube channel The Dreaming Storyteller and publish it by committing a JSON file. Everything is original; nothing here is religious.
 
 ## Steps
 1. Read world/guide.md and world/story_log.csv, and look at the last ~14 rows. Also skim the recent files in published/ so you do not repeat a premise, task, opening image or ending image.

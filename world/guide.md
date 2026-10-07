@@ -1,4 +1,4 @@
-# Fernwick guide (The Lamplit Hour)
+# Fernwick guide (The Dreaming Storyteller)
 
 Fernwick is a small, quiet seaside town where nothing much happens. Every story is another evening there. Everything is invented.
 

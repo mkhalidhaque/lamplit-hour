@@ -1,4 +1,4 @@
-"""Run ONCE on your own computer to get the YT_REFRESH_TOKEN for The Lamplit Hour channel.
+"""Run ONCE on your own computer to get the YT_REFRESH_TOKEN for The Dreaming Storyteller channel.
 
     python -m pip install google-auth-oauthlib
     python get_refresh_token.py
