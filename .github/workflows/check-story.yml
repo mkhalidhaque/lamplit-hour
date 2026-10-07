@@ -1,0 +1,24 @@
+name: Check story
+
+on:
+  pull_request:
+    paths:
+      - "queue/*.json"
+
+jobs:
+  qc:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run automatic quality checks on new stories
+        run: |
+          git fetch origin "${{ github.base_ref }}" --depth=1
+          status=0
+          for f in $(git diff --name-only --diff-filter=AM "origin/${{ github.base_ref }}" HEAD -- 'queue/*.json'); do
+            python scripts/qc.py "$f" || status=1
+          done
+          exit $status

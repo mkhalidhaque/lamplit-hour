@@ -1,0 +1,107 @@
+name: Build episode
+
+on:
+  # An approved story (merged pull request) lands in queue/. Pushing it starts the build.
+  push:
+    branches: [main]
+    paths:
+      - "queue/*.json"
+  # Test or rebuild by hand: Actions > Build episode > Run workflow
+  workflow_dispatch:
+    inputs:
+      file:
+        description: "Story file, e.g. queue/2026-10-08.json"
+        required: true
+      upload:
+        description: "Also upload to YouTube (as private)?"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-episode
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install FFmpeg and fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core
+
+      - name: Install Python libraries
+        run: pip install pillow edge-tts google-api-python-client google-auth
+
+      - name: Find the story to build
+        id: pick
+        run: |
+          if [ -n "${{ inputs.file }}" ]; then
+            f="${{ inputs.file }}"
+          else
+            f=$(git diff --name-only --diff-filter=AM HEAD~1 HEAD -- 'queue/*.json' | sort | tail -n 1)
+          fi
+          echo "file=$f" >> "$GITHUB_OUTPUT"
+          echo "Building: ${f:-nothing}"
+
+      - name: Quality checks
+        if: steps.pick.outputs.file != ''
+        run: python scripts/qc.py "${{ steps.pick.outputs.file }}"
+
+      - name: Voice
+        if: steps.pick.outputs.file != ''
+        run: python scripts/make_voice.py "${{ steps.pick.outputs.file }}"
+
+      - name: Mix sound
+        if: steps.pick.outputs.file != ''
+        run: python scripts/make_audio.py "${{ steps.pick.outputs.file }}"
+
+      - name: Video, thumbnail and Short
+        if: steps.pick.outputs.file != ''
+        run: |
+          python scripts/make_video.py "${{ steps.pick.outputs.file }}"
+          python scripts/make_thumb.py "${{ steps.pick.outputs.file }}"
+          python scripts/make_short.py "${{ steps.pick.outputs.file }}"
+
+      # Short retention: files are deleted after 2 days (the free plan has only 500 MB of storage).
+      - name: Keep outputs for 2 days
+        if: steps.pick.outputs.file != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: episode
+          path: |
+            out/episode.mp4
+            out/thumb.jpg
+            out/short.mp4
+          retention-days: 2
+
+      - name: Upload to YouTube (private)
+        if: ${{ steps.pick.outputs.file != '' && (github.event_name == 'push' || inputs.upload) }}
+        env:
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          YT_PRIVACY: ${{ vars.YT_PRIVACY }}
+        run: python scripts/youtube_upload.py "${{ steps.pick.outputs.file }}"
+
+      - name: Log the episode and move it to published/
+        if: ${{ steps.pick.outputs.file != '' && github.event_name == 'push' }}
+        run: |
+          python scripts/log_episode.py "${{ steps.pick.outputs.file }}"
+          git config user.name "lamplit-hour-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add world/story_log.csv published queue
+          git commit -m "Published $(basename '${{ steps.pick.outputs.file }}') [skip ci]"
+          git push
