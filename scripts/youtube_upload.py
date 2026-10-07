@@ -21,7 +21,7 @@ def description(ep):
         f"{ep['description_summary']}\n\nTonight in Fernwick: {ep['description_setting']}\n\n"
         "About Fernwick: a quiet seaside town where nothing much happens. A new evening every night, "
         "same voice, same lamps.\n\n"
-        "Narration is an AI voice. Stories are original works written for The Dreaming Storyteller, set in Fernwick.\n\n"
+        "Narration is an AI voice. Stories are original works written for Fernwick Nights, set in Fernwick.\n\n"
         f"{tags}"
     )
 

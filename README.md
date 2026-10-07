@@ -1,6 +1,6 @@
 # lamplit-hour
 
-The Dreaming Storyteller: sleep stories set in the invented seaside town of Fernwick.
+Fernwick Nights: sleep stories set in the invented seaside town of Fernwick.
 Approved story JSON in `queue/` -> GitHub Action -> voice, ambience mix, video, thumbnail, Short -> YouTube (private) -> logged in `world/story_log.csv`.
 
 ## Daily flow
@@ -11,7 +11,7 @@ Approved story JSON in `queue/` -> GitHub Action -> voice, ambience mix, video, 
 
 ## One-time setup
 - Create a **private** repo named `lamplit-hour`, copy these files in.
-- Settings > Secrets and variables > Actions: add `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN` (same steps as the trader repo; a channel for The Dreaming Storyteller needs its own refresh token).
+- Settings > Secrets and variables > Actions: add `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN` (same steps as the trader repo; a channel for Fernwick Nights needs its own refresh token).
 - Optional repo variable `YT_PRIVACY` = `public` or `unlisted`, only after Google's API audit is approved. Until then YouTube forces private.
 - Settings > Actions > General > Workflow permissions: Read and write (the bot commits the log).
 - Add 10-30 illustrations to `assets/images/` named after places (e.g. `harbor-lane.jpg`) and, optionally, recorded loops to `assets/ambience/` named `rain`, `wind`, `ocean`, `harbor`, `stove`. Without them the build uses a dark gradient and synthesized noise, so it still works on day one.

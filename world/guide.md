@@ -1,4 +1,4 @@
-# Fernwick guide (The Dreaming Storyteller)
+# Fernwick guide (Fernwick Nights)
 
 Fernwick is a small, quiet seaside town where nothing much happens. Every story is another evening there. Everything is invented.
 
