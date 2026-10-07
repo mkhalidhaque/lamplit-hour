@@ -64,10 +64,12 @@ def main(path):
              [w for w in RELIGION if not (myth and w in {"angel", "holy", "saint"})])
     if h:
         problems.append(f"religion words: {', '.join(h)}")
-    if not text.strip().lower().startswith("hello, and welcome back to fernwick"):
-        problems.append("does not open with the ritual greeting")
-    if "the lamps are low in fernwick. sleep well." not in " ".join(text.lower().split()):
-        problems.append("does not end with the ritual closing line")
+    narration = re.sub(r"[\"\u201c][^\"\u201d]*[\"\u201d]", " ", text)
+    addr = re.findall(r"\b(?:you|your|yours|yourself|welcome|sleep well|goodnight|breathe|breath)\b", narration.lower())
+    if addr:
+        problems.append("speaks to the listener (or relaxation cues) outside dialogue: " + ", ".join(sorted(set(addr))))
+    if "the lamps were low in fernwick, and the town slept." not in " ".join(text.lower().split()):
+        problems.append("does not end with the closing line")
 
     # sentence length should fall: first third vs last third of the first telling
     first = script.split(SECOND_MARKER)[0]

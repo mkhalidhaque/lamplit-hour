@@ -1,7 +1,7 @@
 """Mix voice over a looped ambience bed, add an ambience-only tail, normalize loudness.
 
 Usage: python scripts/make_audio.py queue/2026-10-08.json
-Env: TAIL_SECONDS (default 150), BED_DB (default -22)
+Env: TAIL_SECONDS (default 150), BED_DB (default -22), LOUDNESS (default -30 LUFS)
 Bed: assets/ambience/<ambience>.(mp3|wav|ogg|m4a) if it exists, else synthesized steady noise.
 """
 import os
@@ -13,6 +13,7 @@ from common import ASSETS, OUT, duration, load_episode, run  # noqa: E402
 
 TAIL = float(os.environ.get("TAIL_SECONDS", "150"))
 BED_DB = os.environ.get("BED_DB", "-22")
+LOUD = os.environ.get("LOUDNESS", "-30")  # quieter than the usual -24 so it is gentle in bed
 LEAD = 5.0
 
 # filters that turn white noise into steady, peak-free beds (used when no recorded bed exists)
@@ -52,7 +53,7 @@ def main(ep_path):
         f"[0:a]adelay={int(LEAD * 1000)}:all=1,apad=whole_dur={total:.1f}[v];"
         f"[1:a]{bed_filter}aresample=44100,volume={BED_DB}dB,{fade_in},{fade_out}[b];"
         f"[v][b]amix=inputs=2:duration=first:normalize=0,"
-        f"loudnorm=I=-24:TP=-3:LRA=7,alimiter=limit=0.7[out]"
+        f"loudnorm=I={LOUD}:TP=-6:LRA=7,alimiter=limit=0.5[out]"
     )
     cmd = ["ffmpeg", "-y", "-i", str(voice), *bed_in, "-filter_complex", fc,
            "-map", "[out]", "-t", f"{total:.1f}", "-ac", "2", "-ar", "44100",
