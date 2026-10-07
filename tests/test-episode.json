@@ -1,0 +1,16 @@
+{
+  "story_title": "Pipeline test",
+  "series": "Test",
+  "place": "Test",
+  "character": "",
+  "season": "",
+  "ambience": "rain",
+  "summary": "Pipeline test clip, not a story.",
+  "title_options": ["Pipeline test - delete me | Rain"],
+  "thumbnail_text": "Pipeline Test",
+  "description_summary": "Pipeline test clip. Delete me.",
+  "description_setting": "This is only a test of the upload pipeline.",
+  "tags": ["test"],
+  "short_excerpt": "This is a short test of the voice. The rain is steady. Nothing else is happening.",
+  "script": "Hello, and welcome back to Fernwick.\n\n[pause]\n\nThis is a test of the voice and the rain. Nothing else is happening tonight.\n\n[long pause]\n\n[[SECOND]]\n\nThis is only a test.\n\n[pause]\n\nThe lamps are low in Fernwick. Sleep well."
+}

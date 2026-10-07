@@ -16,6 +16,10 @@ on:
         description: "Also upload to YouTube (as private)?"
         type: boolean
         default: false
+      skip_qc:
+        description: "Skip the quality checks (only for tests/test-episode.json)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -57,7 +61,7 @@ jobs:
           echo "Building: ${f:-nothing}"
 
       - name: Quality checks
-        if: steps.pick.outputs.file != ''
+        if: ${{ steps.pick.outputs.file != '' && !inputs.skip_qc }}
         run: python scripts/qc.py "${{ steps.pick.outputs.file }}"
 
       - name: Voice
