@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import OUT, load_episode, pick_image  # noqa: E402
+from common import OUT, load_episode, pick_image, stamp_brand  # noqa: E402
 
 FONTS = ["/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
          "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"]
@@ -33,6 +33,7 @@ def main(ep_path):
         d.text((62, y + 3), line, font=font, fill=(0, 0, 0))
         d.text((60, y), line, font=font, fill=(244, 232, 205))
         y += 110
+    img = stamp_brand(img, 120, 36, name_px=36)
     OUT.mkdir(exist_ok=True)
     img.save(OUT / "thumb.jpg", quality=88)
     print("thumb.jpg written")

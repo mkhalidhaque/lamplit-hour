@@ -6,7 +6,7 @@ import textwrap
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import OUT, duration, load_episode, pick_image, run  # noqa: E402
+from common import OUT, duration, load_episode, pick_image, run, stamp_brand  # noqa: E402
 from make_voice import speak  # noqa: E402
 
 
@@ -26,6 +26,7 @@ def card(ep, text):
     for ln in lines:
         d.text((90, y), ln, font=font, fill=(244, 232, 205))
         y += 72
+    img = stamp_brand(img, 150, 60)
     p = OUT / "short.png"
     img.save(p)
     return p
