@@ -65,11 +65,16 @@ def main(path):
     if h:
         problems.append(f"religion words: {', '.join(h)}")
     narration = re.sub(r"[\"\u201c][^\"\u201d]*[\"\u201d]", " ", text)
-    addr = re.findall(r"\b(?:you|your|yours|yourself|welcome|sleep well|goodnight|breathe|breath)\b", narration.lower())
+    narration = re.sub(r"^\s*welcome back to fernwick\.", " ", narration.strip(), flags=re.I)
+    narration = re.sub(r"good night\.\s*$", " ", narration.strip(), flags=re.I)
+    addr = re.findall(r"\b(?:you|your|yours|yourself|sleep well|goodnight|breathe|breath)\b", narration.lower())
     if addr:
         problems.append("speaks to the listener (or relaxation cues) outside dialogue: " + ", ".join(sorted(set(addr))))
-    if "the lamps were low in fernwick, and the town slept." not in " ".join(text.lower().split()):
-        problems.append("does not end with the closing line")
+    flat = " ".join(text.lower().split())
+    if not flat.startswith("welcome back to fernwick."):
+        problems.append('does not open with "Welcome back to Fernwick."')
+    if not flat.rstrip().endswith("good night."):
+        problems.append('does not end with "Good night."')
 
     # sentence length should fall: first third vs last third of the first telling
     first = script.split(SECOND_MARKER)[0]

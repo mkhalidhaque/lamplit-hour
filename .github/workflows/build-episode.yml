@@ -47,7 +47,7 @@ jobs:
           sudo apt-get install -y ffmpeg fonts-dejavu-core
 
       - name: Install Python libraries
-        run: pip install pillow edge-tts google-api-python-client google-auth
+        run: pip install pillow numpy edge-tts google-api-python-client google-auth
 
       - name: Find the story to build
         id: pick

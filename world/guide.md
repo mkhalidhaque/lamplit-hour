@@ -7,7 +7,7 @@ Fernwick is a small, quiet seaside town where nothing much happens. Every story 
 - No organized religion: no worship, clergy, places of worship, scripture or religious holidays. Festivals are secular.
 - Seasons follow the real calendar on the day the episode goes up.
 - Gentle, old technology: lamps, kettles, ferries, bicycles, trains, radios. No phones or screens.
-- Every episode opens "Hello, and welcome back to Fernwick." and ends "The lamps are low in Fernwick. Sleep well."
+- Every episode opens "Welcome back to Fernwick." and ends "Good night." The rest is pure narration.
 
 ## Places (the image file is assets/images/<place name, lowercase, dashes>.jpg)
 | Place | What it is | Sounds and light |
