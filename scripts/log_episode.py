@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from common import load_episode  # noqa: E402
 
-FIELDS = ["date", "series", "place", "character", "season", "ambience", "story_title", "summary"]
+FIELDS = ["date", "series", "place", "character", "season", "ambience", "story_title", "summary", "source_tradition", "source_note"]
 
 
 def main(path):

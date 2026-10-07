@@ -106,7 +106,8 @@ def main(path):
                 problems.append(f"same series+place already used on {row['date']}")
 
     for f in ("story_title", "series", "place", "ambience", "title_options", "thumbnail_text",
-              "description_summary", "description_setting", "tags", "short_excerpt"):
+              "description_summary", "description_setting", "tags", "short_excerpt",
+              "source_tradition", "source_note"):
         if not ep.get(f):
             problems.append(f"missing field: {f}")
 
