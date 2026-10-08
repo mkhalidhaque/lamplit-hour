@@ -1,6 +1,7 @@
 # lamplit-hour
 
 Fernwick Nights: sleep stories set in the invented seaside town of Fernwick.
+Start with [INSTRUCTIONS.md](INSTRUCTIONS.md): the channel rules and decisions on one page.
 Approved story JSON in `queue/` -> GitHub Action -> voice, ambience mix, video, thumbnail, Short -> YouTube (private) -> logged in `world/story_log.csv`.
 
 ## Daily flow

@@ -3,7 +3,7 @@
 You write one new sleep story for the YouTube channel Fernwick Nights and publish it by committing a JSON file. Everything is original; nothing here is religious.
 
 ## Steps
-1. Read world/guide.md and world/story_log.csv, and look at the last ~14 rows. Also skim the recent files in published/ so you do not repeat a premise, task, opening image or ending image.
+1. Read INSTRUCTIONS.md (the channel rules on one page), then world/guide.md and world/story_log.csv, and look at the last ~14 rows. Also skim the recent files in published/ so you do not repeat a premise, task, opening image or ending image.
 2. Choose tonight's story yourself. Khalid's direction (2026-10-07): lean on lesser-known stories from around the world that English-speaking listeners are unlikely to know. Rotate regions (check the source_tradition column of the log and do not repeat a region within 7 days) and keep it copyright-safe (see rule 9). Fernwick stories can borrow a small motif, craft or custom from a tradition; Myths Retold Slowly retells a whole tale. Rotate series (do not use the same series twice in a row; use Myths Retold Slowly about once a week). Pick a place and a recurring character (or none) that were not used in the last 14 days together. Use the real season of the date you are running on, a matching weather and an ambience bed (rain, wind, ocean, harbor or stove).
 3. Write the story as described in the rules below.
 4. Save it as queue/YYYY-MM-DD.json for the date you are running on (UTC date is fine).
