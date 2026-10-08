@@ -22,4 +22,4 @@ Approved story JSON in `queue/` -> GitHub Action -> voice, ambience mix, video, 
 - Voice: `edge-tts` (free, unofficial). Change the voice with the `VOICE` environment variable in `build-episode.yml`.
 
 ## Story file fields
-story_title, series, place, character, season, ambience, summary, title_options[3], script (with [pause], [long pause] and a [[SECOND]] marker before the slower second telling), thumbnail_text, description_summary, description_setting, tags[10], short_excerpt, image_brief, new_world_facts.
+story_title, series, place, character, season, ambience, summary, hook, context, title_options[3], script (with [pause], [long pause] and a [[SECOND]] marker before the slower second telling), thumbnail_text, description_summary, description_setting, tags[10], short_excerpt, image_brief, new_world_facts.

@@ -46,4 +46,4 @@ Soft gouache-like scenes, deep shadow, one warm light source. People small or fr
 
 ## Details added by stories
 - Bakery (Oct 7): the sourdough starter lives in a crock by the window; Tomas keeps a small radio turned very low.
-- Green Kettle (Oct 8): Ines knits in an old basket with a lid that never shuts, from a pattern card found in a biscuit tin; she is making mittens for Barnaby Teague. The clock over the counter always says quarter to nine. The lamplighter rides a bicycle along Harbor Lane.
+- Green Kettle (Oct 8): Ines knits in an old basket with a lid that never shuts, from a pattern card found in a biscuit tin; she secretly knits Barnaby Teague a pair of mittens every autumn and leaves them on the ferry wheel in brown paper tied with red wool, no note (since his first cold night in the tea room, 22 years ago). Barnaby thinks Oriel knits them; Oriel cannot knit. Ines dries orange peel on the stove; her six cups are blue, white, white, green, white, and one with a chipped gold rim. The clock over the counter always says quarter to nine. The lamplighter rides a bicycle along Harbor Lane.

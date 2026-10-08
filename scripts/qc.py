@@ -2,6 +2,7 @@
 
 Usage: python scripts/qc.py queue/2026-10-08.json
 Checks: length, pause markers, banned AI-sounding phrases, alarm words, religion words,
+an opening hook and grounding context, enough sensory description,
 similarity to earlier episodes, and series/place repeats in the last 14 days.
 """
 import csv
@@ -14,7 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from common import SECOND_MARKER, load_episode, plain_text  # noqa: E402
 
-WORDS_MIN, WORDS_MAX = 1300, 2300  # ~15-20 min of narration plus ambience tail
+WORDS_MIN, WORDS_MAX = 1600, 2300  # ~15-20 min of narration plus ambience tail
 BANNED = ["tapestry", "symphony", "embrace", "testament", "nestled", "whisper of", "a sense of",
           "as if the world itself", "little did", "in the heart of", "bustling", "delve", "journey of", "magical"]
 ALARM = ["scream", "blood", "crash", "gun", "monster", "died", "dead", "suddenly", "shadowy figure", "explod",
@@ -22,6 +23,19 @@ ALARM = ["scream", "blood", "crash", "gun", "monster", "died", "dead", "suddenly
 RELIGION = ["prayer", "pray", "church", "chapel", "cathedral", "mosque", "synagogue", "scripture", "bible",
             "quran", "saint", "priest", "vicar", "worship", "sermon", "blessing", "christmas", "easter", "eid",
             "diwali", "ramadan", "hanukkah", "angel", "holy"]
+# Sensory words, grouped by sense, used to make sure the story is described and not just summarized
+SENSES = {
+    "sound": ["click", "tick", "creak", "hum", "mutter", "rustl", "hiss", "lap", "patter", "drip", "murmur",
+              "sound", "quiet", "soft", "rattl", "chime", "knock", "whistl", "crackl", "sigh"],
+    "touch": ["warm", "cool", "cold", "soft", "rough", "smooth", "heavy", "damp", "wet", "dry", "snug", "heat",
+              "wool", "worn", "stiff", "silk", "prickl", "tender"],
+    "smell": ["smell", "scent", "smok", "toast", "tea", "pine", "salt", "bread", "peel", "coffee", "spice",
+              "cinnamon", "resin", "earth", "lavender", "honey"],
+    "sight": ["glow", "light", "shin", "amber", "gold", "gray", "cream", "blue", "green", "orange", "shadow",
+              "pale", "flicker", "color", "lamp", "dark", "silver", "plum"],
+}
+MIN_SENSE_HITS = 60       # in the first telling
+MIN_FIRST_PARAGRAPHS = 16  # first telling must be a real story, not a sketch
 NGRAM = 8
 MAX_SHARED_NGRAMS = 3
 
@@ -76,8 +90,36 @@ def main(path):
     if not flat.rstrip().endswith("good night."):
         problems.append('does not end with "Good night."')
 
-    # sentence length should fall: first third vs last third of the first telling
+    # hook and grounding context: the first 150 words after the welcome must carry the hook
     first = script.split(SECOND_MARKER)[0]
+    opening = " ".join(words(plain_text(first))[4:154])
+    hook = ep.get("hook", "")
+    if not hook:
+        problems.append("missing field: hook (the one-sentence question or small mystery that opens the story)")
+    else:
+        key = {w for w in words(hook) if len(w) > 3}
+        found = {w for w in key if w in opening.split()}
+        if len(found) < 0.6 * len(key):
+            problems.append("hook: the story must open with the hook (most of its words belong in the first 150 words)")
+    if not ep.get("context"):
+        problems.append("missing field: context (who, where and why it matters, set up in the first two paragraphs)")
+    if re.match(r"(it is|it was) (the )?(a |an )?\w*\s?(evening|night|morning|middle of|early|late)", opening):
+        problems.append("opening starts with the date or weather; open with the hook instead")
+
+    # description: enough paragraphs and sensory detail in the first telling
+    fparas = [p for p in re.split(r"\n\s*\n", plain_text(first)) if words(p)]
+    if len(fparas) < MIN_FIRST_PARAGRAPHS:
+        problems.append(f"first telling has {len(fparas)} paragraphs, expected at least {MIN_FIRST_PARAGRAPHS}")
+    fwords = " " + " ".join(words(plain_text(first))) + " "
+    sense_hits = {k: len(re.findall(r"\b(?:" + "|".join(map(re.escape, v)) + r")", fwords)) for k, v in SENSES.items()}
+    notes.append("sensory words: " + ", ".join(f"{k} {v}" for k, v in sense_hits.items()))
+    if sum(sense_hits.values()) < MIN_SENSE_HITS:
+        problems.append(f"only {sum(sense_hits.values())} sensory words in the first telling, expected {MIN_SENSE_HITS}+")
+    thin = [k for k, v in sense_hits.items() if v < 6]
+    if thin:
+        problems.append("too little description for: " + ", ".join(thin))
+
+    # sentence length should fall: first third vs last third of the first telling
     sents = [len(words(s)) for s in re.split(r"[.!?]+", plain_text(first)) if words(s)]
     if len(sents) > 12:
         a = sum(sents[: len(sents) // 3]) / (len(sents) // 3)
@@ -109,6 +151,8 @@ def main(path):
                 d = date.fromisoformat(row["date"])
             except Exception:
                 continue
+            if row.get("story_title") == ep.get("story_title"):
+                continue  # this same story, being rebuilt
             if d >= cutoff and row.get("place") == ep.get("place") and row.get("series") == ep.get("series"):
                 problems.append(f"same series+place already used on {row['date']}")
 
