@@ -1,7 +1,8 @@
 """Picture + episode.mp3 -> out/episode.mp4 (1920x1080).
 
-The picture gets a gently flickering light (candle, lantern, fire or window glow) that is rendered once as a
-seamless 12-second loop and then repeated for the whole episode, so the file stays small.
+The picture gets a gently flickering light (candle, lantern, fire or window glow) plus slow looping motion
+(embers, smoke, rain, snow, dust motes, a slow push in; see motion.py). It is rendered once as a seamless
+12-second loop and then repeated for the whole episode, so the file stays small and the render quick.
 
 The episode JSON may contain "light": {"type": "candle|lantern|fire|window|lamp", "x": 0.52, "y": 0.60}
 (x and y are fractions of the picture). If it is missing, the brightest part of the picture glows.
@@ -15,8 +16,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 from common import OUT, branded_frame, duration, load_episode, map_point, run  # noqa: E402
+from motion import Motion  # noqa: E402
 
-W, H, FPS, LOOP_SECONDS = 1920, 1080, 12, 12
+W, H, FPS, LOOP_SECONDS = 1920, 1080, 15, 12
 FLAMES = {"candle", "lantern", "fire", "stove"}
 
 
@@ -73,6 +75,8 @@ def render_loop(ep, loop_path):
     dist2 = (xx - lx) ** 2 + (yy - ly) ** 2
     glow = np.exp(-dist2 / (2 * 330.0 ** 2))[..., None].astype("float32")
     warm = np.array([1.0, 0.82, 0.55], dtype="float32")
+    motion = Motion(ep, kind, lx, ly, W, H, LOOP_SECONDS)
+    print("motion:", ", ".join(motion.effects) or "light only")
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}",
            "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "slow", "-crf", "30", "-g", str(FPS * 2),
            "-pix_fmt", "yuv420p", str(loop_path)]
@@ -86,6 +90,7 @@ def render_loop(ep, loop_path):
             img = draw_flame(frame, lx, ly, kind, t)
         else:
             img = Image.fromarray(frame)
+        img = motion.zoom(motion.overlay(img, t), t)
         proc.stdin.write(img.tobytes())
     proc.stdin.close()
     if proc.wait() != 0:

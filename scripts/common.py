@@ -138,8 +138,11 @@ SEASON_WORDS = {"autumn": ["autumn", "september", "october", "november", "harves
                 "summer": ["summer", "june", "july", "august", "midsummer"]}
 
 
-def story_image(ep):
-    """The place picture, framed and graded for this story (1920x1080), with rain or mist when the story has it."""
+def story_image(ep, still=True):
+    """The place picture, framed and graded for this story (1920x1080), with rain or mist when the story has it.
+
+    still=False leaves the rain out, because the video animates it (motion.py).
+    """
     import random
     from PIL import Image, ImageDraw, ImageFilter
     src = pick_image(ep)
@@ -156,7 +159,7 @@ def story_image(ep):
             img = Image.blend(img, Image.new("RGB", img.size, color), k)
             break
     rnd = random.Random(_seed(ep))
-    if "rain" in text:
+    if "rain" in text and still:
         layer = Image.new("L", img.size, 0)
         d = ImageDraw.Draw(layer)
         for _ in range(900):
@@ -208,7 +211,7 @@ def stamp_brand(img, mark_px, margin, name_px=0):
 
 def branded_frame(ep):
     """Episode picture with the channel logo and name added; saved to out/frame.jpg."""
-    img = story_image(ep)
+    img = story_image(ep, still=False)
     img = stamp_brand(img, 110, 40, name_px=34)
     OUT.mkdir(exist_ok=True)
     p = OUT / "frame.jpg"
