@@ -43,3 +43,7 @@ Fernwick Evenings, Night Journeys, Keepers of the Night, Weather Watch, Slow Cra
 
 ## Visual style
 Soft gouache-like scenes, deep shadow, one warm light source. People small or from behind, never faces to camera. Deep navy, dark teal, charcoal with amber and cream light.
+
+## Details added by stories
+- Bakery (Oct 7): the sourdough starter lives in a crock by the window; Tomas keeps a small radio turned very low.
+- Green Kettle (Oct 8): Ines knits in an old basket with a lid that never shuts, from a pattern card found in a biscuit tin; she is making mittens for Barnaby Teague. The clock over the counter always says quarter to nine. The lamplighter rides a bicycle along Harbor Lane.
