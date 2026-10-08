@@ -7,7 +7,7 @@ Fernwick is a small, quiet seaside town where nothing much happens. Every story 
 - No organized religion: no worship, clergy, places of worship, scripture or religious holidays. Festivals are secular.
 - Seasons follow the real calendar on the day the episode goes up.
 - Gentle, old technology: lamps, kettles, ferries, bicycles, trains, radios. No phones or screens.
-- Every episode opens "Welcome back to Fernwick." and ends "Good night." The rest is pure narration.
+- Every episode opens "Welcome to Fernwick Nights.", names tonight's story and its teller, and ends "Good night." In between, a wise storyteller tells the story to a listener (see Storytellers).
 
 ## Places (the image file is assets/images/<place name, lowercase, dashes>.jpg)
 | Place | What it is | Sounds and light |
@@ -32,6 +32,10 @@ Fernwick is a small, quiet seaside town where nothing much happens. Every story 
 - Pip: cat of uncertain ownership. Sleeps on the warmest thing in each story.
 - Mr. Aldous Reed: stationmaster, retired but never off duty. Winds the station clock at the same time each night.
 
+## Storytellers (Khalid, 2026-10-08)
+Each episode is told by someone wise to a listener, a different teller each night (none twice within 7 days). The teller speaks in the first person, knows the story because they saw it, heard it or were part of it, and adds a few asides of their own. Any of the recurring cast can tell a story, and so can people passing through. Ideas: an old ferryman, a grandmother by the stove, a retired stationmaster, a traveling clockmender, a beekeeper, a ship's cook, a lamplighter, a woman who mends nets.
+- Oriel Penhallow (Oct 8): told the mitten story to a visitor in the lighthouse kitchen. Voice en-US-AvaNeural.
+
 ## Seasons and secular festivals
 - Spring: pale gold evenings, fresh rain, open windows. Blossom Walk (lamps along the lane).
 - Summer: long blue dusk, warm stone, moths at the lamp. Midsummer Lanterns on the harbor.
@@ -46,4 +50,4 @@ Soft gouache-like scenes, deep shadow, one warm light source. People small or fr
 
 ## Details added by stories
 - Bakery (Oct 7): the sourdough starter lives in a crock by the window; Tomas keeps a small radio turned very low.
-- Green Kettle (Oct 8): Ines knits in an old basket with a lid that never shuts, from a pattern card found in a biscuit tin; she secretly knits Barnaby Teague a pair of mittens every autumn and leaves them on the ferry wheel in brown paper tied with red wool, no note (since his first cold night in the tea room, 22 years ago). Barnaby thinks Oriel knits them; Oriel cannot knit. Ines dries orange peel on the stove; her six cups are blue, white, white, green, white, and one with a chipped gold rim. The clock over the counter always says quarter to nine. The lamplighter rides a bicycle along Harbor Lane.
+- Green Kettle (Oct 8): Ines knits in an old basket with a lid that never shuts, from a pattern card found in a biscuit tin; she secretly knits Barnaby Teague a pair of mittens every autumn and leaves them on the ferry wheel in brown paper tied with red wool, no note (since his first cold night in the tea room, 22 years ago). Barnaby thinks Oriel knits them; Oriel cannot knit, knows the secret (she saw Ines from the lamp room one dawn) and never says. Oriel is a woman. Ines dries orange peel on the stove; her six cups are blue, white, white, green, white, and one with a chipped gold rim. The clock over the counter always says quarter to nine. The lamplighter rides a bicycle along Harbor Lane.

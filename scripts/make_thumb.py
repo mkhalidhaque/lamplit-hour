@@ -3,16 +3,16 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import OUT, load_episode, pick_image, stamp_brand  # noqa: E402
+from common import OUT, load_episode, stamp_brand, story_image  # noqa: E402
 
 FONTS = ["/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf",
          "/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf"]
 
 
 def main(ep_path):
-    from PIL import Image, ImageDraw, ImageEnhance, ImageFont
+    from PIL import Image, ImageDraw, ImageEnhance, ImageFont  # noqa: F401
     ep = load_episode(ep_path)
-    img = Image.open(pick_image(ep)).convert("RGB")
+    img = story_image(ep)
     w, h = img.size
     tw, th = (w, int(w * 9 / 16)) if w / h < 16 / 9 else (int(h * 16 / 9), h)
     img = img.crop(((w - tw) // 2, (h - th) // 2, (w - tw) // 2 + tw, (h - th) // 2 + th)).resize((1280, 720))

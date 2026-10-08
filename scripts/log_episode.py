@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from common import load_episode  # noqa: E402
 
-FIELDS = ["date", "series", "place", "character", "season", "ambience", "story_title", "summary", "source_tradition", "source_note"]
+FIELDS = ["date", "series", "place", "character", "season", "ambience", "story_title", "summary", "source_tradition", "source_note", "teller"]
 
 
 def main(path):
@@ -22,6 +22,7 @@ def main(path):
         row = {k: ep.get(k, "") for k in FIELDS}
         row["date"] = date.today().isoformat()
         row["summary"] = ep.get("summary", "")
+        row["teller"] = (ep.get("teller") or {}).get("name", "")
         w.writerow(row)
     Path("published").mkdir(exist_ok=True)
     shutil.move(path, Path("published") / Path(path).name)

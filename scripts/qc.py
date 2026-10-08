@@ -2,6 +2,7 @@
 
 Usage: python scripts/qc.py queue/2026-10-08.json
 Checks: length, pause markers, banned AI-sounding phrases, alarm words, religion words,
+the spoken intro (title, teller), chapters, teller/listener/voice fields,
 an opening hook and grounding context, enough sensory description,
 similarity to earlier episodes, and series/place repeats in the last 14 days.
 """
@@ -13,9 +14,9 @@ from datetime import date, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import SECOND_MARKER, load_episode, plain_text  # noqa: E402
+from common import CHAPTER_RE, SECOND_MARKER, VOICES, load_episode, plain_text  # noqa: E402
 
-WORDS_MIN, WORDS_MAX = 1600, 2300  # ~15-20 min of narration plus ambience tail
+WORDS_MIN, WORDS_MAX = 1650, 2200  # ~15-20 min at ~110 words a minute, plus ambience tail
 BANNED = ["tapestry", "symphony", "embrace", "testament", "nestled", "whisper of", "a sense of",
           "as if the world itself", "little did", "in the heart of", "bustling", "delve", "journey of", "magical"]
 ALARM = ["scream", "blood", "crash", "gun", "monster", "died", "dead", "suddenly", "shadowy figure", "explod",
@@ -65,7 +66,7 @@ def main(path):
         problems.append(f"length {n} words, expected {WORDS_MIN}-{WORDS_MAX}")
     if SECOND_MARKER not in script:
         problems.append("missing [[SECOND]] marker for the slower second telling")
-    paras = [p for p in re.split(r"\n\s*\n", script) if p.strip()]
+    paras = [p for p in re.split(r"\n\s*\n", plain_text(script)) if words(p)]
     pauses = len(re.findall(r"\[(?:long )?pause\]", script))
     if pauses < max(1, len(paras) // 2 - 1):
         problems.append(f"only {pauses} pause markers for {len(paras)} paragraphs")
@@ -78,21 +79,43 @@ def main(path):
              [w for w in RELIGION if not (myth and w in {"angel", "holy", "saint"})])
     if h:
         problems.append(f"religion words: {', '.join(h)}")
-    narration = re.sub(r"[\"\u201c][^\"\u201d]*[\"\u201d]", " ", text)
-    narration = re.sub(r"^\s*welcome back to fernwick\.", " ", narration.strip(), flags=re.I)
-    narration = re.sub(r"good night\.\s*$", " ", narration.strip(), flags=re.I)
-    addr = re.findall(r"\b(?:you|your|yours|yourself|sleep well|goodnight|breathe|breath)\b", narration.lower())
-    if addr:
-        problems.append("speaks to the listener (or relaxation cues) outside dialogue: " + ", ".join(sorted(set(addr))))
-    flat = " ".join(text.lower().split())
-    if not flat.startswith("welcome back to fernwick."):
-        problems.append('does not open with "Welcome back to Fernwick."')
-    if not flat.rstrip().endswith("good night."):
+    # spoken intro: "Welcome to Fernwick Nights.", tonight's title and who is telling it
+    paras_plain = [" ".join(words(p)) for p in re.split(r"\n\s*\n", plain_text(script)) if words(p)]
+    intro = paras_plain[0] if paras_plain else ""
+    if not intro.startswith("welcome to fernwick nights"):
+        problems.append('first paragraph must start "Welcome to Fernwick Nights."')
+    title_core = " ".join(words(re.sub(r"\(part.*?\)", "", ep.get("story_title", ""), flags=re.I)))
+    if title_core and title_core not in intro:
+        problems.append("intro must say tonight's story title")
+    teller = ep.get("teller") or {}
+    if not (isinstance(teller, dict) and teller.get("name") and teller.get("who")):
+        problems.append('missing field: teller {"name": ..., "who": ...} (the wise storyteller for tonight)')
+    elif " ".join(words(teller["name"])) not in intro:
+        problems.append("intro must name the teller")
+    if not ep.get("listener"):
+        problems.append("missing field: listener (who the teller is telling the story to)")
+    if ep.get("voice") not in VOICES:
+        problems.append("voice must be one of: " + ", ".join(VOICES))
+    chapters = re.findall(CHAPTER_RE, script.split(SECOND_MARKER)[0])
+    if not script.lstrip().startswith("[[CHAPTER"):
+        problems.append("script must start with a [[CHAPTER Welcome]] line")
+    if len(chapters) < 4:
+        problems.append(f"{len(chapters)} chapters in the first telling, expected at least 4")
+    # no relaxation instructions in the story itself (the intro may say "get comfortable")
+    cues = re.findall(r"\b(?:breathe|breath|inhale|exhale|sleep well|relax your|close your eyes)\b",
+                      " ".join(paras_plain[1:]))
+    if cues:
+        problems.append("relaxation cues in the story: " + ", ".join(sorted(set(cues))))
+    if not " ".join(paras_plain).endswith("good night"):
         problems.append('does not end with "Good night."')
+    for t in ep.get("title_options", []):
+        if len(t) > 100:
+            problems.append(f"title over 100 characters: {t}")
 
-    # hook and grounding context: the first 150 words after the welcome must carry the hook
+    # hook and grounding context: the first 150 words after the intro must carry the hook
     first = script.split(SECOND_MARKER)[0]
-    opening = " ".join(words(plain_text(first))[4:154])
+    after_intro = re.split(r"\n\s*\n", plain_text(first).strip(), maxsplit=1)
+    opening = " ".join(words(after_intro[-1])[:150])
     hook = ep.get("hook", "")
     if not hook:
         problems.append("missing field: hook (the one-sentence question or small mystery that opens the story)")

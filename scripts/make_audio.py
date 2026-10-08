@@ -9,12 +9,11 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import ASSETS, OUT, duration, load_episode, run  # noqa: E402
+from common import ASSETS, LEAD, OUT, duration, load_episode, run  # noqa: E402
 
 TAIL = float(os.environ.get("TAIL_SECONDS", "150"))
 BED_DB = os.environ.get("BED_DB", "-22")
 LOUD = os.environ.get("LOUDNESS", "-30")  # quieter than the usual -24 so it is gentle in bed
-LEAD = 5.0
 
 # filters that turn white noise into steady, peak-free beds (used when no recorded bed exists)
 SYNTH = {

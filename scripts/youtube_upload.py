@@ -5,6 +5,7 @@ Skips quietly if they are missing. Uploads are PRIVATE by default: YouTube locks
 unaudited API projects to private. Set YT_PRIVACY to public/unlisted only after the audit passes.
 Usage: python scripts/youtube_upload.py queue/2026-10-08.json
 """
+import json
 import os
 import sys
 from pathlib import Path
@@ -15,12 +16,32 @@ from common import OUT, load_episode  # noqa: E402
 CATEGORY = "24"  # Entertainment
 
 
+def stamp(seconds):
+    s = int(seconds)
+    return f"{s // 3600}:{s % 3600 // 60:02d}:{s % 60:02d}" if s >= 3600 else f"{s // 60}:{s % 60:02d}"
+
+
+def chapter_lines():
+    """'0:00 Welcome' lines from out/chapters.json (YouTube needs 3+ chapters, 10 s apart, starting at 0:00)."""
+    f = OUT / "chapters.json"
+    if not f.exists():
+        return ""
+    ch = json.loads(f.read_text())
+    ok = [c for i, c in enumerate(ch) if i == 0 or c["start"] - ch[i - 1]["start"] >= 10]
+    if len(ok) < 3 or ok[0]["start"] != 0:
+        return ""
+    return "Chapters\n" + "\n".join(f"{stamp(c['start'])} {c['title']}" for c in ok) + "\n\n"
+
+
 def description(ep):
     tags = " ".join(h if h.startswith("#") else "#" + h for h in ep.get("hashtags", ["sleepstory", "bedtimestoriesforadults", "cozy"])[:3])
+    teller = ep.get("teller", {})
+    told = f"Told by {teller['name']}, {teller['who']}.\n\n" if teller.get("name") and teller.get("who") else ""
     return (
-        f"{ep['description_summary']}\n\nTonight in Fernwick: {ep['description_setting']}\n\n"
+        f"{ep['description_summary']}\n\n{told}Tonight in Fernwick: {ep['description_setting']}\n\n"
+        f"{chapter_lines()}"
         "About Fernwick: a quiet seaside town where nothing much happens. A new evening every night, "
-        "same voice, same lamps.\n\n"
+        "told by a different Fernwick storyteller.\n\n"
         "Narration is an AI voice. Stories are original works written for Fernwick Nights, set in Fernwick.\n\n"
         f"{tags}"
     )

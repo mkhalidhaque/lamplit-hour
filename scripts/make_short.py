@@ -6,13 +6,13 @@ import textwrap
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import OUT, duration, load_episode, pick_image, run, stamp_brand  # noqa: E402
-from make_voice import speak  # noqa: E402
+from common import OUT, duration, load_episode, run, stamp_brand, story_image  # noqa: E402
+from make_voice import pick_voice, speak  # noqa: E402
 
 
 def card(ep, text):
     from PIL import Image, ImageDraw, ImageEnhance, ImageFont
-    img = Image.open(pick_image(ep)).convert("RGB")
+    img = story_image(ep)
     w, h = img.size
     tw = int(h * 9 / 16)
     left = max(0, (w - tw) // 2)
@@ -35,7 +35,7 @@ def card(ep, text):
 async def main(ep_path):
     ep = load_episode(ep_path)
     text = ep["short_excerpt"].strip()
-    await speak(text, "-18%", OUT / "short_voice.mp3")
+    await speak(text, "-18%", OUT / "short_voice.mp3", voice=pick_voice(ep))
     png = card(ep, text)
     secs = duration(OUT / "short_voice.mp3") + 3
     bed = f"anoisesrc=color=pink:amplitude=0.5,highpass=f=400,lowpass=f=5000,volume=-24dB"

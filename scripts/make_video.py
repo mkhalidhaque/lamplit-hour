@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import OUT, branded_frame, duration, load_episode, run  # noqa: E402
+from common import OUT, branded_frame, duration, load_episode, map_point, run  # noqa: E402
 
 W, H, FPS, LOOP_SECONDS = 1920, 1080, 12, 12
 FLAMES = {"candle", "lantern", "fire", "stove"}
@@ -24,7 +24,8 @@ def find_light(base, ep):
     import numpy as np
     spec = ep.get("light") or {}
     if "x" in spec and "y" in spec:
-        return float(spec["x"]) * W, float(spec["y"]) * H, spec.get("type", "window")
+        x, y = map_point(ep, float(spec["x"]) * W, float(spec["y"]) * H, W, H)
+        return x, y, spec.get("type", "window")
     lum = base.mean(axis=2)
     lum[: H // 8] = 0  # ignore the very top edge
     lum[-H // 6:, -700:] = 0  # ignore the logo corner
