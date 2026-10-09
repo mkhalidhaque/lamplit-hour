@@ -14,7 +14,7 @@ import math
 import random
 
 EFFECTS = ["embers", "smoke", "rain", "snow", "dust", "zoom"]
-FLAMES = {"candle", "lantern", "fire", "stove"}
+FLAMES = {"candle", "lantern", "fire", "stove", "hearth"}
 
 
 def pick(ep, kind):

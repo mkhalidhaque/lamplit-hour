@@ -1,8 +1,10 @@
 """Mix voice over a looped ambience bed, add an ambience-only tail, normalize loudness.
 
 Usage: python scripts/make_audio.py queue/2026-10-08.json
-Env: TAIL_SECONDS (default 150), BED_DB (default -22), LOUDNESS (default -30 LUFS)
-Bed: assets/ambience/<ambience>.(mp3|wav|ogg|m4a) if it exists, else synthesized steady noise.
+Env: TAIL_SECONDS (default 600), BED_DB (default -22), LOUDNESS (default -30 LUFS)
+Bed: the story's own soundscape built by make_bed.py (layers from the "soundscape" field, e.g. stove crackle +
+clock + room tone). A recorded assets/ambience/<ambience>.(mp3|wav|ogg|m4a) is used instead only when the story
+names no soundscape. After the story the bed rises gently and plays alone for TAIL_SECONDS, then fades.
 """
 import os
 import sys
@@ -11,19 +13,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from common import ASSETS, LEAD, OUT, duration, load_episode, run  # noqa: E402
 
-TAIL = float(os.environ.get("TAIL_SECONDS", "150"))
+TAIL = float(os.environ.get("TAIL_SECONDS", "600"))
 BED_DB = os.environ.get("BED_DB", "-22")
 LOUD = os.environ.get("LOUDNESS", "-30")  # quieter than the usual -24 so it is gentle in bed
-
-# filters that turn white noise into steady, peak-free beds (used when no recorded bed exists)
-SYNTH = {
-    "rain": "anoisesrc=color=pink:amplitude=0.6,highpass=f=400,lowpass=f=6000",
-    "wind": "anoisesrc=color=brown:amplitude=0.8,lowpass=f=500,tremolo=f=0.07:d=0.35",
-    "ocean": "anoisesrc=color=brown:amplitude=0.9,lowpass=f=700,tremolo=f=0.11:d=0.5",
-    "harbor": "anoisesrc=color=brown:amplitude=0.9,lowpass=f=700,tremolo=f=0.11:d=0.5",
-    "stove": "anoisesrc=color=brown:amplitude=0.6,lowpass=f=300",
-}
-
 
 def find_bed(name):
     for ext in (".mp3", ".wav", ".ogg", ".m4a"):
@@ -38,19 +30,20 @@ def main(ep_path):
     name = ep.get("ambience", "rain").lower().split()[0]
     voice = OUT / "voice.mp3"
     total = LEAD + duration(voice) + TAIL
-    bed = find_bed(name)
-    if bed:
-        bed_in = ["-stream_loop", "-1", "-i", str(bed)]
-        bed_filter = ""
-    else:
-        syn = SYNTH.get(name, SYNTH["rain"])
-        bed_in = ["-f", "lavfi", "-i", syn]
-        bed_filter = ""
+    bed = None if ep.get("soundscape") else find_bed(name)
+    if not bed:
+        import make_bed
+        make_bed.main(ep_path)
+        bed = OUT / "bed.wav"
+    bed_in = ["-stream_loop", "-1", "-i", str(bed)]
+    vend = LEAD + duration(voice) + 3
+    # after the story the soundscape rises by about 4 dB over 20 s, so it carries the listener on alone
+    rise = f"volume='if(gt(t,{vend:.1f}),min(1.6,1+0.6*(t-{vend:.1f})/20),1)':eval=frame,"
     fade_in = "afade=t=in:st=0:d=6"
-    fade_out = f"afade=t=out:st={total - 25:.1f}:d=25"
+    fade_out = f"afade=t=out:st={total - 40:.1f}:d=40"
     fc = (
         f"[0:a]adelay={int(LEAD * 1000)}:all=1,apad=whole_dur={total:.1f}[v];"
-        f"[1:a]{bed_filter}aresample=44100,volume={BED_DB}dB,{fade_in},{fade_out}[b];"
+        f"[1:a]{rise}aresample=44100,volume={BED_DB}dB,{fade_in},{fade_out}[b];"
         f"[v][b]amix=inputs=2:duration=first:normalize=0,"
         f"loudnorm=I={LOUD}:TP=-6:LRA=7,alimiter=limit=0.5[out]"
     )

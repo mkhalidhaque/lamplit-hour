@@ -94,6 +94,10 @@ def main(path):
         problems.append("intro must name the teller")
     if not ep.get("listener"):
         problems.append("missing field: listener (who the teller is telling the story to)")
+    from make_bed import LAYERS
+    bad = [x for x in ep.get("soundscape", []) if x not in LAYERS]
+    if not ep.get("soundscape") or bad:
+        problems.append("soundscape must be a list of 2 to 4 of: " + ", ".join(LAYERS))
     if ep.get("voice") not in VOICES:
         problems.append("voice must be one of: " + ", ".join(VOICES))
     chapters = re.findall(CHAPTER_RE, script.split(SECOND_MARKER)[0])

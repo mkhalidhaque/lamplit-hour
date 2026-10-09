@@ -10,6 +10,7 @@ PAUSE_SECONDS = {"[pause]": 2.0, "[long pause]": 4.0}
 SECOND_MARKER = "[[SECOND]]"
 CHAPTER_RE = r"\[\[CHAPTER [^\]]+\]\]"  # [[CHAPTER Name]] on its own line starts a YouTube chapter
 LEAD = 5.0  # seconds of ambience before the voice starts (make_audio.py), also shifts chapter times
+FIRE_X, FIRE_Y = 960, 760  # where the logs sit in assets/images/fireplace.jpg (make_fireplace.py)
 DEFAULT_VOICE = "en-GB-SoniaNeural"
 # Free edge-tts voices allowed for narrators: pick the one that fits the teller (warmest first).
 VOICES = {
@@ -70,9 +71,30 @@ def plain_text(script):
     return re.sub(r"\[\[SECOND\]\]|" + CHAPTER_RE + r"|\[long pause\]|\[pause\]", " ", script)
 
 
+def story_picture(ep):
+    """This story's own painted picture (made by make_image.py), or None."""
+    p = ASSETS / "images" / "stories" / (slugify(ep.get("story_title", "")) + ".jpg")
+    return p if p.exists() else None
+
+
+def slugify(text):
+    return re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+
+
+def using_fireplace(ep):
+    """True when the story has no picture of its own, so the video shows the fireplace with burning logs."""
+    return not story_picture(ep) and (ASSETS / "images" / "fireplace.jpg").exists()
+
+
 def pick_image(ep):
-    """Use assets/images/<place>.* if present, else any image, else make a dark gradient."""
+    """This story's own picture; else the fireplace with burning logs (Khalid, 2026-10-09);
+    else assets/images/<place>.*, else any image, else a dark gradient."""
     from PIL import Image
+    own = story_picture(ep)
+    if own:
+        return own
+    if using_fireplace(ep):
+        return ASSETS / "images" / "fireplace.jpg"
     exts = (".jpg", ".jpeg", ".png")
     slug = re.sub(r"[^a-z0-9]+", "-", ep.get("place", "").lower()).strip("-")
     cands = [p for p in sorted((ASSETS / "images").glob("*")) if p.suffix.lower() in exts]
@@ -122,6 +144,8 @@ def story_view(ep, w=1920, h=1080):
 
 def map_point(ep, x, y, w=1920, h=1080):
     """Where a point of the original place picture lands in this story's framing."""
+    if story_picture(ep) or using_fireplace(ep):
+        return x, y
     flip, zoom, left, top = story_view(ep, w, h)
     if flip:
         x = w - x
@@ -147,7 +171,7 @@ def story_image(ep, still=True):
     from PIL import Image, ImageDraw, ImageFilter
     src = pick_image(ep)
     img = Image.open(src).convert("RGB").resize((1920, 1080))
-    if src.stem != "fallback":
+    if src.stem not in ("fallback", "fireplace") and not story_picture(ep):
         flip, zoom, left, top = story_view(ep)
         if flip:
             img = img.transpose(Image.FLIP_LEFT_RIGHT)

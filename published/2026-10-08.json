@@ -11,6 +11,11 @@
   "voice": "en-US-AvaNeural",
   "season": "mid October",
   "ambience": "stove",
+  "soundscape": [
+    "room",
+    "crackle",
+    "clock"
+  ],
   "summary": "Every autumn someone leaves mittens on the ferry wheel for Barnaby Teague, and tonight the secret knitter, Ines Larkspur, finishes this year's pair by the coal stove of the closed Green Kettle. She knits bands of stars and pine sprigs from an old Baltic pattern card and dozes with the pair on her knee.",
   "source_tradition": "Baltic folk knitting (patterned mittens with star and pine bands), Latvia and neighbouring coast",
   "source_note": "Traditional hand-knitting patterns are a folk craft in the public domain; the story, characters and wording are entirely original.",
@@ -44,7 +49,7 @@
     "x": 0.5,
     "y": 0.45
   },
-  "image_brief": "A seaside tea room at night seen through a large warm amber window, a cat curled on the tiles and a chair beside a glowing coal stove, a little frost at the corners of the glass. Deep navy and teal shadows, one warm light source, no faces, no religious symbols.",
+  "image_brief": "Inside a small seaside tea room at night: a worn armchair beside a squat black coal stove glowing orange through its little iron door, a willow knitting basket with gray and cream wool and a star-patterned mitten resting on the chair, a cat curled asleep on the warm hearth tiles, six cups in a row on a wooden shelf, a fogged window showing harbor lamps outside.",
   "short_excerpt": "Every autumn, on the first truly cold morning, Barnaby Teague finds a pair of mittens waiting for him on the wheel of the Wren Island ferry. They come wrapped in brown paper and tied with a length of red wool. There is never a note. Barnaby has piloted that ferry for twenty-two years, and in all that time he has never found out who leaves them. I know who it is. I have known for years. And since the lamp up here turns all night whether I watch it or not, I will tell you.",
   "new_world_facts": [
     "Ines has secretly left a pair of mittens on Barnaby's ferry wheel every autumn for twenty-two years, wrapped in brown paper and tied with red wool, never with a note.",

@@ -64,6 +64,10 @@ jobs:
         if: ${{ steps.pick.outputs.file != '' && !inputs.skip_qc }}
         run: python scripts/qc.py "${{ steps.pick.outputs.file }}"
 
+      - name: Story picture
+        if: steps.pick.outputs.file != ''
+        run: python scripts/make_image.py "${{ steps.pick.outputs.file }}"
+
       - name: Voice
         if: steps.pick.outputs.file != ''
         run: python scripts/make_voice.py "${{ steps.pick.outputs.file }}"
@@ -106,6 +110,19 @@ jobs:
           python scripts/log_episode.py "${{ steps.pick.outputs.file }}"
           git config user.name "lamplit-hour-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add world/story_log.csv published queue
+          git add world/story_log.csv published queue assets/images/stories
           git commit -m "Published $(basename '${{ steps.pick.outputs.file }}') [skip ci]"
+          git pull --rebase origin main
           git push
+
+      - name: Save the story picture (rebuilds)
+        if: ${{ steps.pick.outputs.file != '' && github.event_name != 'push' }}
+        run: |
+          git config user.name "lamplit-hour-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets/images/stories
+          if ! git diff --cached --quiet; then
+            git commit -m "Story picture for $(basename '${{ steps.pick.outputs.file }}') [skip ci]"
+            git pull --rebase origin main
+            git push
+          fi
