@@ -25,6 +25,17 @@ def prompt(ep):
     return f"{brief}. {ep.get('season', '')} in a small invented seaside town. {STYLE}"
 
 
+def crop_16_9(img):
+    """Cut a 16:9 frame without stretching, leaving out the bottom strip where the free service puts its mark."""
+    w, h = img.width, int(img.height * 0.92)
+    if w / h > 16 / 9:
+        cw = int(h * 16 / 9)
+        return img.crop(((w - cw) // 2, 0, (w - cw) // 2 + cw, h))
+    ch = int(w * 9 / 16)
+    top = max(0, (h - ch) // 2)
+    return img.crop((0, top, w, top + ch))
+
+
 def main(ep_path):
     from PIL import Image
     ep = load_episode(ep_path)
@@ -43,7 +54,7 @@ def main(ep_path):
             if img.width < 800:
                 raise ValueError(f"picture too small: {img.size}")
             out.parent.mkdir(parents=True, exist_ok=True)
-            img.resize((1920, 1080)).save(out, quality=84)
+            crop_16_9(img).resize((1920, 1080), Image.LANCZOS).save(out, quality=86)
             print(f"story picture painted: {out}")
             return 0
         except Exception as e:  # the service is free and sometimes busy
