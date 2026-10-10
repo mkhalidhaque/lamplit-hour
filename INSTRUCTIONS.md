@@ -6,7 +6,7 @@ Claude reads this before every daily story. When Khalid gives new direction, add
 ## 1. The channel
 - **Name:** Fernwick Nights (handle @fernwicknights). The repo keeps its old name, `lamplit-hour`.
 - **What it is:** original, calm bedtime stories for grown-ups, set in Fernwick, an invented quiet seaside town. One new video a day, 15 to 20 minutes, then quiet ambience.
-- **Look and sound:** one dark, warm picture of the place with one flickering light, the fern-and-lantern logo stamped on frame, thumbnail and Short; a free edge-tts voice; rain, wind, ocean, harbor or stove ambience.
+- **Look and sound:** one dark, warm picture of the place with one flickering light, the fern-and-lantern logo stamped on frame, thumbnail and Short; a free edge-tts voice; rain, wind, ocean, harbor or stove ambience, starting silent and rising slowly under the voice.
 - **Goal:** daily uploads at $0 cost, fully automated, growing toward monetization.
 
 ## 2. Hard rules (never break these)
@@ -64,3 +64,4 @@ Build files are deleted after 1 to 2 days.
 ## 8. Decision log
 - 2026-10-07: Channel named Fernwick Nights. World Fernwick and the Fernwick Guide approved. Free voice. 15 to 20 minute videos. Pipeline in GitHub Actions. Daily story, Claude chooses. No organized religion; mythology allowed. Never say "bible". Cozy-spooky season Oct 17 to 31. Long stories split into parts.
 - 2026-10-08: Every story needs a hook, context and rich description. A different wise teller each night, speaking to the listener. Concrete, exact sensory detail in every scene.
+- 2026-10-10: Background sound starts silent and rises slowly through the story, peaking well under the teller (about 14 dB) and dipping a little while they speak. The voice always stays clearly on top. Set in scripts/make_audio.py.
