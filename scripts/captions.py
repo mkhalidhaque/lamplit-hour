@@ -70,6 +70,7 @@ def wrap(text):
 class Captions:
     def __init__(self):
         self.cues = []  # (start, end, text)
+        self.paragraphs = self.word_timed = 0
 
     def add_paragraph(self, text, start, end, words=None):
         pieces = split_cues(text)
@@ -82,6 +83,8 @@ class Captions:
                 i += c
             if any(s is None for s in starts):
                 starts = None
+        self.paragraphs += 1
+        self.word_timed += starts is not None
         if starts is None:  # share the paragraph's time out by length
             total = sum(len(p) for p in pieces) or 1
             starts, t = [], start

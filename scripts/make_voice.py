@@ -98,7 +98,7 @@ async def main(ep_path):
         chapters[0]["start"] = 0.0  # YouTube needs the first chapter at 0:00
         chapters.append({"title": "Quiet ambience to stay asleep", "start": round(LEAD + t + 3, 1)})
     (OUT / "chapters.json").write_text(json.dumps(chapters, indent=1))
-    print(f"captions: {captions.write(OUT)} cues")
+    print(f"captions: {captions.write(OUT)} cues, {captions.word_timed} of {captions.paragraphs} paragraphs timed by word")
     print(f"pace: {spoken} words in {t / 60:.1f} min = {spoken / (t / 60):.0f} words a minute (aim ~110)")
     lst = work / "list.txt"
     lst.write_text("".join(f"file '{p.resolve()}'\n" for p in parts))
