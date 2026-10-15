@@ -1,5 +1,7 @@
 # Fernwick guide (Fernwick Nights)
 
+> Retired 2026-10-15: the channel now tells lesser-known Greek myths (see INSTRUCTIONS.md and prompts/daily-story.md). This guide is kept for the Fernwick-town episodes of Oct 7 to 14.
+
 Fernwick is a small, quiet seaside town where nothing much happens. Every story is another evening there. Everything is invented.
 
 ## Ground rules

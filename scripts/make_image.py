@@ -21,8 +21,8 @@ STYLE = ("soft gouache painting, storybook illustration, cozy and calm, night, d
 
 
 def prompt(ep):
-    brief = ep.get("image_brief") or f"{ep.get('place', 'a seaside town')} at night"
-    return f"{brief}. {ep.get('season', '')} in a small invented seaside town. {STYLE}"
+    brief = ep.get("image_brief") or f"{ep.get('place', 'a Greek island')} at night"
+    return f"{brief}. The ancient Greek world of myth, a quiet night. {STYLE}"
 
 
 def crop_16_9(img):

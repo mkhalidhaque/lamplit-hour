@@ -1,6 +1,6 @@
 # lamplit-hour
 
-Fernwick Nights: sleep stories set in the invented seaside town of Fernwick.
+Fernwick Nights: lesser-known Greek myths retold slowly as sleep stories (from 2026-10-15; the first week was set in the invented seaside town of Fernwick).
 Start with [INSTRUCTIONS.md](INSTRUCTIONS.md): the channel rules and decisions on one page.
 Approved story JSON in `queue/` -> GitHub Action -> voice, ambience mix, video, thumbnail, Short -> YouTube (private) -> logged in `world/story_log.csv`.
 
