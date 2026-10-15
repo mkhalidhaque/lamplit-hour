@@ -13,7 +13,7 @@ Check every detail against the ancient sources before writing; these notes are r
 - **Asteria**: Titan goddess of falling stars; she leapt into the sea as a quail and became a floating island, later Delos, where Leto finally found a place to rest (Hesiod, Theogony 409; Apollodorus 1.4.1; Callimachus, Hymn to Delos). Care: she was fleeing Zeus; say only that she did not wish to be found.
 
 ## Sea and wind
-- **Alcyone and Ceyx**: a king lost at sea, a dream sent through Morpheus, and both turned into kingfishers; Aeolus calms the sea for seven days each winter while they nest, the "halcyon days" (Ovid, Met. 11; Apollodorus 1.7.4). Care: the shipwreck is one soft sentence.
+- **Alcyone and Ceyx** (USED 2026-10-15): a king lost at sea, a dream sent through Morpheus, and both turned into kingfishers; Aeolus calms the sea for seven days each winter while they nest, the "halcyon days" (Ovid, Met. 11; Apollodorus 1.7.4). Care: the shipwreck is one soft sentence.
 - **Glaucus**: a fisherman who sees his catch revive on a strange grass, tastes it and becomes a sea god with a green-blue beard (Ovid, Met. 13).
 - **Proteus**: the Old Man of the Sea who herds seals off Pharos and changes into a lion, a tree, running water to avoid answering questions (Odyssey 4). Humorous.
 - **Ino / Leucothea**: the sea goddess who rises like a gull and gives the shipwrecked Odysseus her veil to float him to shore (Odyssey 5). Care: skip her earlier life.
