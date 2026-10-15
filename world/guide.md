@@ -1,5 +1,7 @@
 # Fernwick guide (Fernwick Nights)
 
+> Retired 2026-10-15: the channel now tells lesser-known Greek myths (see INSTRUCTIONS.md and prompts/daily-story.md). This guide is kept for the Fernwick-town episodes of Oct 7 to 14.
+
 Fernwick is a small, quiet seaside town where nothing much happens. Every story is another evening there. Everything is invented.
 
 ## Ground rules
@@ -56,3 +58,4 @@ Soft gouache-like scenes, deep shadow, one warm light source. People small or fr
 - Fernwick Halt (Oct 11): Aldous Reed was stationmaster for thirty-four years and still winds the station clock each night; on full-moon nights he sets it two minutes slow so the Moon has longer at the window. The waiting room has six wooden benches worn into shallow dips, a black stove with a kettle, a brass lamp with a green glass shade, and a timetable so old that two towns on it have changed their names. Retold myth: the Moon (Selene) and the sleeping shepherd Endymion on Mount Latmos.
 - Pennywhistle Books (Oct 12): Willa Quince makes one marbled sheet of paper every evening in the back room (behind a faded green velvet curtain: long low table, shallow tin tray, seven paint jars, a line of drying papers) and each sheet goes inside the next book she sells. She learned the Turkish craft ebru from a visiting marbler named Selin, who stayed three weeks one wet October. Willa has a gray plait and ink on her thumb. Tobias Vane is a traveling clockmender who passes through.
 - Salt Marsh path (Oct 13): nine lamps line the boardwalk, lit each dusk with a long taper by Nell Garrity, a retired teacher (38 years in the brick schoolroom with the crooked clock). Barnaby Teague sits on the bench by the second lamp each October with an empty bamboo cage from Keiko, a traveler from Japan, counting cricket chirps in fourteen seconds (+40) in a notebook; the first night below the middle fifties he lights the ferry galley stove for winter. Ines leaves a quilted pot of tea on the rail.
+- Old Mill Pond (Oct 14): Percival Oake, retired miller, lives in the mill house (green door that sticks, copper pans on a beam, hat on the old sack-hoist, small stove with a dented kettle). On the first hard frost he lays small potatoes on the slate ledge, the Andean chuño custom, taught by letter by pen friend Marisol; on the longest night he makes soup for whoever knocks. Bram Hollis, carpenter, grew up in the mill house.

@@ -37,15 +37,18 @@ def chapter_lines():
 
 
 def description(ep):
-    tags = " ".join(h if h.startswith("#") else "#" + h for h in ep.get("hashtags", ["sleepstory", "bedtimestoriesforadults", "cozy"])[:3])
+    tags = " ".join(h if h.startswith("#") else "#" + h for h in ep.get("hashtags", ["greekmythology", "sleepstory", "bedtimestoriesforadults"])[:3])
     teller = ep.get("teller", {})
     told = f"Told by {teller['name']}, {teller['who']}.\n\n" if teller.get("name") and teller.get("who") else ""
+    sources = "Ancient sources: " + "; ".join(ep["myth_sources"]) + "\n\n" if ep.get("myth_sources") else ""
     return (
-        f"{ep['description_summary']}\n\n{told}Tonight in Fernwick: {ep['description_setting']}\n\n"
+        f"{ep['description_summary']}\n\n{told}{ep['description_setting']}\n\n"
         f"{chapter_lines()}"
-        "About Fernwick: a quiet seaside town where nothing much happens. A new evening every night, "
-        "told by a different Fernwick storyteller.\n\n"
-        "Narration is an AI voice. Stories are original works written for Fernwick Nights, set in Fernwick.\n\n"
+        f"{sources}"
+        "Fernwick Nights: a lesser-known tale from the Greek myths every night, told slowly and calmly "
+        "by a different storyteller, for falling asleep.\n\n"
+        "Narration is an AI voice. Each retelling is an original work written for Fernwick Nights from the "
+        "ancient, public-domain sources.\n\n"
         f"{tags}"
     )
 

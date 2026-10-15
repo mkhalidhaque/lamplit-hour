@@ -4,7 +4,8 @@ Usage: python scripts/qc.py queue/2026-10-08.json
 Checks: length, pause markers, banned AI-sounding phrases, alarm words, religion words,
 the spoken intro (title, teller), chapters, teller/listener/voice fields,
 an opening hook and grounding context, enough sensory description,
-similarity to earlier episodes, and series/place repeats in the last 14 days.
+similarity to earlier episodes, and (since 2026-10-15, lesser-known Greek myths) the myth figure:
+named in every title, sources given, and never used before (world/greek_figures.csv).
 """
 import csv
 import json
@@ -23,17 +24,17 @@ ALARM = ["scream", "blood", "crash", "gun", "monster", "died", "dead", "suddenly
          "thunderclap", "terrified", "panic", "knife", "danger", "attack", "storm raged"]
 RELIGION = ["prayer", "pray", "church", "chapel", "cathedral", "mosque", "synagogue", "scripture", "bible",
             "quran", "saint", "priest", "vicar", "worship", "sermon", "blessing", "christmas", "easter", "eid",
-            "diwali", "ramadan", "hanukkah", "angel", "holy"]
+            "diwali", "ramadan", "hanukkah", "angel", "holy", "temple", "altar", "sacrific"]
 # Sensory words, grouped by sense, used to make sure the story is described and not just summarized
 SENSES = {
-    "sound": ["click", "tick", "creak", "hum", "mutter", "rustl", "hiss", "lap", "patter", "drip", "murmur",
+    "sound": ["cicada", "bell", "click", "tick", "creak", "hum", "mutter", "rustl", "hiss", "lap", "patter", "drip", "murmur",
               "sound", "quiet", "soft", "rattl", "chime", "knock", "whistl", "crackl", "sigh"],
     "touch": ["warm", "cool", "cold", "soft", "rough", "smooth", "heavy", "damp", "wet", "dry", "snug", "heat",
-              "wool", "worn", "stiff", "silk", "prickl", "tender"],
+              "wool", "worn", "stiff", "silk", "prickl", "tender", "stone", "sand", "linen", "bronze"],
     "smell": ["smell", "scent", "smok", "toast", "tea", "pine", "salt", "bread", "peel", "coffee", "spice",
-              "cinnamon", "resin", "earth", "lavender", "honey"],
+              "cinnamon", "resin", "earth", "lavender", "honey", "thyme", "olive", "figs", "myrtle", "laurel", "wine"],
     "sight": ["glow", "light", "shin", "amber", "gold", "gray", "cream", "blue", "green", "orange", "shadow",
-              "pale", "flicker", "color", "lamp", "dark", "silver", "plum"],
+              "pale", "flicker", "color", "lamp", "dark", "silver", "plum", "stars", "white", "purple"],
 }
 MIN_SENSE_HITS = 60       # in the first telling
 MIN_FIRST_PARAGRAPHS = 16  # first telling must be a real story, not a sketch
@@ -74,9 +75,8 @@ def main(path):
         h = hits(text, terms)
         if h:
             problems.append(f"{label}: {', '.join(h)}")
-    myth = ep.get("series", "").lower().startswith("myths")
-    h = hits(text + " " + ep.get("story_title", "") + " " + " ".join(ep.get("tags", [])),
-             [w for w in RELIGION if not (myth and w in {"angel", "holy", "saint"})])
+    # Greek myth is told as story, not worship: "angel", "holy" and "saint" never fit, temples and altars are blocked
+    h = hits(text + " " + ep.get("story_title", "") + " " + " ".join(ep.get("tags", [])), RELIGION)
     if h:
         problems.append(f"religion words: {', '.join(h)}")
     # spoken intro: "Welcome to Fernwick Nights.", tonight's title and who is telling it
@@ -169,10 +169,33 @@ def main(path):
         if shared > MAX_SHARED_NGRAMS:
             problems.append(f"{shared} shared {NGRAM}-word phrases with {p.name}")
 
-    # series/place combination used in the last 14 days
+    # the myth figure (Khalid, 2026-10-15): searchable titles, real sources, never the same figure twice
+    figure = (ep.get("myth_figure") or "").strip()
+    if not figure:
+        problems.append("missing field: myth_figure (tonight's lesser-known Greek figure)")
+    else:
+        fig = " ".join(words(figure))
+        for t in ep.get("title_options", []):
+            if fig not in " ".join(words(t)):
+                problems.append(f"title must name {figure}: {t}")
+        if fig not in " ".join(paras_plain[:4]):
+            problems.append(f"name {figure} in the opening (intro, hook or context)")
+        used = Path("world/greek_figures.csv")
+        if used.exists():
+            core = lambda t: " ".join(words(re.sub(r"\(part.*?\)", "", t or "", flags=re.I)))
+            for row in csv.DictReader(used.open(encoding="utf-8")):
+                if " ".join(words(row.get("myth_figure", ""))) == fig and core(row.get("story_title")) != core(ep.get("story_title")):
+                    problems.append(f"{figure} was already used on {row.get('date')} ({row.get('story_title')})")
+            if not any(" ".join(words(r.get("myth_figure", ""))) == fig for r in csv.DictReader(used.open(encoding="utf-8"))):
+                problems.append(f"add {figure} to world/greek_figures.csv")
+    if not ep.get("myth_sources"):
+        problems.append("missing field: myth_sources (the ancient sources followed)")
+
+    # teller not repeated within 7 days
     log = Path("world/story_log.csv")
-    if log.exists():
-        cutoff = date.today() - timedelta(days=14)
+    name = (ep.get("teller") or {}).get("name", "") if isinstance(ep.get("teller"), dict) else ""
+    if log.exists() and name:
+        cutoff = date.today() - timedelta(days=7)
         for row in csv.DictReader(log.open(encoding="utf-8")):
             try:
                 d = date.fromisoformat(row["date"])
@@ -180,8 +203,8 @@ def main(path):
                 continue
             if row.get("story_title") == ep.get("story_title"):
                 continue  # this same story, being rebuilt
-            if d >= cutoff and row.get("place") == ep.get("place") and row.get("series") == ep.get("series"):
-                problems.append(f"same series+place already used on {row['date']}")
+            if d >= cutoff and row.get("teller") == name:
+                problems.append(f"teller {name} already told a story on {row['date']}")
 
     for f in ("story_title", "series", "place", "ambience", "title_options", "thumbnail_text",
               "description_summary", "description_setting", "tags", "short_excerpt",
