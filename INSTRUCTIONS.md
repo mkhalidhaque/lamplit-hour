@@ -47,7 +47,7 @@ Total about 1,750 to 2,150 words. The full spec, JSON fields and voice list are 
 1. Around noon Eastern, Claude picks and writes the day's story as `queue/YYYY-MM-DD.json`.
 2. `python scripts/qc.py` must pass (hook, length, sensory detail, banned and religion words, repetition).
 3. Claude adds the figure to `world/greek_figures.csv` and commits to `main`.
-4. GitHub Actions builds the voice, video, thumbnail and Short, uploads to YouTube as **private**, and logs it.
+4. GitHub Actions builds the voice, captions, video, thumbnail and Short, uploads to YouTube as **private**, and logs it.
 5. Khalid listens to the first minutes in YouTube Studio and sets it public or scheduled.
 Build files are deleted after 1 to 2 days.
 
@@ -67,4 +67,5 @@ Build files are deleted after 1 to 2 days.
 ## 8. Decision log
 - 2026-10-07: Channel named Fernwick Nights. World Fernwick and the Fernwick Guide approved. Free voice. 15 to 20 minute videos. Pipeline in GitHub Actions. Daily story, Claude chooses. No organized religion; mythology allowed. Never say "bible". Cozy-spooky season Oct 17 to 31. Long stories split into parts.
 - 2026-10-08: Every story needs a hook, context and rich description. A different wise teller each night, speaking to the listener. Concrete, exact sensory detail in every scene.
+- 2026-10-14: Every video has captions from 2026-10-15: soft cream serif burned into the picture, low and centred, timed from the narration (`scripts/captions.py`). An English caption track is also added on YouTube once the refresh token allows captions (re-run `scripts/get_refresh_token.py`).
 - 2026-10-15: Pivot to lesser-known Greek mythology (Khalid: the Fernwick tales got no traction). Every story from 2026-10-15 is one little-known Greek figure, interesting, with a strong hook, told calmly for sleep by a different wise teller. Same channel, name, logo, intro and outro. Fernwick-town tales retired. Myth told as story, never worship. Never repeat a figure.

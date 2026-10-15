@@ -3,6 +3,9 @@
 Secrets (repo Settings > Secrets > Actions): YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN.
 Skips quietly if they are missing. Uploads are PRIVATE by default: YouTube locks uploads from
 unaudited API projects to private. Set YT_PRIVACY to public/unlisted only after the audit passes.
+Also adds out/captions.srt as an English caption track. That needs a refresh token made with the
+youtube.force-ssl scope (get_refresh_token.py asks for it); with an older upload-only token it is skipped
+with a note, and the captions burned into the picture still show.
 Usage: python scripts/youtube_upload.py queue/2026-10-08.json
 """
 import json
@@ -75,9 +78,9 @@ def main(ep_path):
     from googleapiclient.discovery import build
     from googleapiclient.http import MediaFileUpload
 
+    # no scopes here: the access token gets every scope the refresh token was granted (upload, and captions if allowed)
     creds = Credentials(None, refresh_token=refresh, token_uri="https://oauth2.googleapis.com/token",
-                        client_id=cid, client_secret=secret,
-                        scopes=["https://www.googleapis.com/auth/youtube.upload"])
+                        client_id=cid, client_secret=secret)
     youtube = build("youtube", "v3", credentials=creds)
     status = {"privacyStatus": privacy, "selfDeclaredMadeForKids": False}
 
@@ -92,6 +95,15 @@ def main(ep_path):
             youtube.thumbnails().set(videoId=vid, media_body=MediaFileUpload(str(thumb))).execute()
         except Exception as e:  # needs a verified channel and the youtube scope; not fatal
             print(f"thumbnail not set ({type(e).__name__}); set it in YouTube Studio")
+    subs = OUT / "captions.srt"
+    if subs.exists():
+        try:
+            youtube.captions().insert(
+                part="snippet", body={"snippet": {"videoId": vid, "language": "en", "name": "English"}},
+                media_body=MediaFileUpload(str(subs), mimetype="application/octet-stream")).execute()
+            print("Caption track added (English)")
+        except Exception as e:  # needs the youtube.force-ssl scope; not fatal, captions are burned in too
+            print(f"caption track not added ({type(e).__name__}); re-run get_refresh_token.py to allow it")
 
     short = OUT / "short.mp4"
     if short.exists():

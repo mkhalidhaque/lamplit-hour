@@ -7,9 +7,13 @@ The picture gets a gently flickering light (candle, lantern, fire or window glow
 The episode JSON may contain "light": {"type": "candle|lantern|fire|window|lamp", "x": 0.52, "y": 0.60}
 (x and y are fractions of the picture). If it is missing, the brightest part of the picture glows.
 
+Captions: when make_voice.py wrote out/captions.ass, they are drawn into the picture in the Fernwick style
+(soft cream serif, low and centred). That needs one full re-encode of the episode. Env BURN_CAPTIONS=0 skips it.
+
 Usage: python scripts/make_video.py queue/2026-10-08.json
 """
 import math
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -136,10 +140,19 @@ def main(ep_path):
     loop = OUT / "loop.mp4"
     kind, lx, ly = render_loop(ep, loop)
     length = duration(OUT / "episode.mp3")
+    subs = OUT / "captions.ass"
+    burn = subs.exists() and os.environ.get("BURN_CAPTIONS", "1") != "0"
+    if burn:
+        fonts = "/usr/share/fonts/truetype/dejavu"
+        video = ["-vf", f"ass={subs}:fontsdir={fonts}", "-c:v", "libx264", "-preset", "veryfast", "-crf", "30",
+                 "-g", str(FPS * 2), "-r", str(FPS), "-pix_fmt", "yuv420p"]
+    else:
+        video = ["-c:v", "copy"]
     run(["ffmpeg", "-y", "-stream_loop", "-1", "-i", str(loop), "-i", str(OUT / "episode.mp3"),
-         "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "128k", "-t", f"{length:.2f}",
+         "-map", "0:v", "-map", "1:a", *video, "-c:a", "aac", "-b:a", "128k", "-t", f"{length:.2f}",
          "-movflags", "+faststart", str(OUT / "episode.mp4")])
-    print(f"episode.mp4 with flickering {kind} light at ({lx:.0f},{ly:.0f})")
+    print(f"episode.mp4 with flickering {kind} light at ({lx:.0f},{ly:.0f})"
+          + (", captions burned in" if burn else ""))
 
 
 if __name__ == "__main__":
