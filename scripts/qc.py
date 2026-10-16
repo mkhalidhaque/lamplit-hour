@@ -7,6 +7,10 @@ an opening hook and grounding context, enough sensory description,
 similarity to earlier episodes, the never-say phrases in every field, the open question and its payoff,
 and (since 2026-10-15, Greek myths) the myth figure:
 named in every title, sources given, and never used before (world/greek_figures.csv).
+Since 2026-10-17 (growth, Khalid "Do all"): a ~20 s cold open before the welcome that promises a payoff,
+the payoff in the second half of the first telling, a curiosity-style first title, short bold
+thumbnail words, a series from world/series.json, and a "tomorrow" teaser for the next figure, which the
+next night must keep.
 """
 import csv
 import json
@@ -16,7 +20,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from common import CHAPTER_RE, SECOND_MARKER, VOICES, load_episode, plain_text  # noqa: E402
+from common import CHAPTER_RE, SECOND_MARKER, VOICES, load_episode, load_series, plain_text, short_title  # noqa: E402
 
 WORDS_MIN, WORDS_MAX = 1650, 2200  # ~15-20 min at ~110 words a minute, plus ambience tail
 BANNED = ["tapestry", "symphony", "embrace", "testament", "nestled", "whisper of", "a sense of",
@@ -43,6 +47,12 @@ MIN_SENSE_HITS = 60       # in the first telling
 MIN_FIRST_PARAGRAPHS = 16  # first telling must be a real story, not a sketch
 NGRAM = 8
 MAX_SHARED_NGRAMS = 3
+COLD_OPEN_WORDS = (28, 50)  # about 20 seconds at the slowed voice
+# the cold open must promise the listener something the story will pay off later
+PROMISE_CUES = ["by the end", "before the end", "before we", "before the night", "before the fire", "before you sleep",
+                "before you drift", "stay with me", "i will tell you", "i'll tell you", "you will find out",
+                "you'll find out", "you will see", "you'll see", "you will know", "you'll know", "tonight you"]
+CURIOUS = {"who", "whose", "that", "which", "why", "how", "what", "when", "where"}
 
 
 def words(text):
@@ -84,9 +94,22 @@ def main(path):
         problems.append(f"religion words: {', '.join(h)}")
     # spoken intro: "Welcome to Fernwick Nights.", tonight's title and who is telling it
     paras_plain = [" ".join(words(p)) for p in re.split(r"\n\s*\n", plain_text(script)) if words(p)]
-    intro = paras_plain[0] if paras_plain else ""
+    # paragraph 1 is the cold open (the hook in ~20 s), paragraph 2 the welcome
+    cold = paras_plain[0] if paras_plain else ""
+    at = 1 if len(paras_plain) > 1 and paras_plain[1].startswith("welcome to fernwick nights") else 0
+    intro = paras_plain[at] if paras_plain else ""
     if not intro.startswith("welcome to fernwick nights"):
-        problems.append('first paragraph must start "Welcome to Fernwick Nights."')
+        problems.append('second paragraph (after the cold open) must start "Welcome to Fernwick Nights."')
+    if at == 0:
+        problems.append("missing cold open: the script must begin with the hook (about 20 seconds) before the welcome")
+    else:
+        n_cold = len(cold.split())
+        if not COLD_OPEN_WORDS[0] <= n_cold <= COLD_OPEN_WORDS[1]:
+            problems.append(f"cold open is {n_cold} words, expected {COLD_OPEN_WORDS[0]}-{COLD_OPEN_WORDS[1]} (about 20 seconds)")
+        if ep.get("cold_open") and " ".join(words(ep["cold_open"])) != cold:
+            problems.append("field cold_open must be exactly the first paragraph of the script")
+        if not any(c in cold for c in PROMISE_CUES):
+            problems.append("cold open must promise a payoff (e.g. \"by the end of tonight you will know...\")")
     title_core = " ".join(words(re.sub(r"\(part.*?\)", "", ep.get("story_title", ""), flags=re.I)))
     if title_core and title_core not in intro:
         problems.append("intro must say tonight's story title")
@@ -110,7 +133,7 @@ def main(path):
         problems.append(f"{len(chapters)} chapters in the first telling, expected at least 4")
     # no relaxation instructions in the story itself (the intro may say "get comfortable")
     cues = re.findall(r"\b(?:breathe|breath|inhale|exhale|sleep well|relax your|close your eyes)\b",
-                      " ".join(paras_plain[1:]))
+                      " ".join(paras_plain[at + 1:]))
     if cues:
         problems.append("relaxation cues in the story: " + ", ".join(sorted(set(cues))))
     if not " ".join(paras_plain).endswith("good night"):
@@ -121,16 +144,16 @@ def main(path):
 
     # hook and grounding context: the first 150 words after the intro must carry the hook
     first = script.split(SECOND_MARKER)[0]
-    after_intro = re.split(r"\n\s*\n", plain_text(first).strip(), maxsplit=1)
-    opening = " ".join(words(after_intro[-1])[:150])
+    after_intro = " ".join(paras_plain[at + 1:])
+    opening = " ".join(words(after_intro)[:150])
     hook = ep.get("hook", "")
     if not hook:
         problems.append("missing field: hook (the one-sentence question or small mystery that opens the story)")
     else:
         key = {w for w in words(hook) if len(w) > 3}
-        found = {w for w in key if w in opening.split()}
+        found = {w for w in key if w in (cold + " " + opening).split()}
         if len(found) < 0.6 * len(key):
-            problems.append("hook: the story must open with the hook (most of its words belong in the first 150 words)")
+            problems.append("hook: the story must open with the hook (most of its words belong in the cold open or the first 150 words)")
     # keep them listening (Khalid, 2026-10-16): an open question the story carries, answered by a payoff
     if not ep.get("open_question"):
         problems.append("missing field: open_question (the question the hook plants and the story answers)")
@@ -138,10 +161,14 @@ def main(path):
     if not payoff:
         problems.append("missing field: payoff (how the open question is answered in the first telling)")
     else:
-        story = " ".join(words(plain_text(first)))
+        # it lands in the second half of the first telling: late enough to keep people listening (the cold
+        # open promises it), early enough that the last part only winds down
+        fw = words(plain_text(first))
+        late = set(fw[int(len(fw) * 0.45):])
         key = {w for w in words(payoff) if len(w) > 3}
-        if key and len({w for w in key if w in story.split()}) < 0.6 * len(key):
-            problems.append("payoff: the first telling must actually answer the open question (most payoff words belong in it)")
+        if key and len(key & late) < 0.6 * len(key):
+            problems.append("payoff: the second half of the first telling must answer the open question "
+                            "(most payoff words belong there)")
     if not ep.get("context"):
         problems.append("missing field: context (who, where and why it matters, set up in the first two paragraphs)")
     if re.match(r"(it is|it was) (the )?(a |an )?\w*\s?(evening|night|morning|middle of|early|late)", opening):
@@ -192,7 +219,7 @@ def main(path):
         for t in ep.get("title_options", []):
             if fig not in " ".join(words(t)):
                 problems.append(f"title must name {figure}: {t}")
-        if fig not in " ".join(paras_plain[:4]):
+        if fig not in " ".join(paras_plain[:at + 4]):
             problems.append(f"name {figure} in the opening (intro, hook or context)")
         used = Path("world/greek_figures.csv")
         if used.exists():
@@ -204,6 +231,46 @@ def main(path):
                 problems.append(f"add {figure} to world/greek_figures.csv")
     if not ep.get("myth_sources"):
         problems.append("missing field: myth_sources (the ancient sources followed)")
+
+    # titles and thumbnail (growth, 2026-10-17): curiosity first, short bold thumbnail words
+    titles = ep.get("title_options", [])
+    if titles and not (CURIOUS & set(words(short_title(ep))) or "?" in short_title(ep)):
+        problems.append("first title must be a curiosity title, e.g. \"The Queen Who Tricked a God | Metis | ...\"")
+    tt = words(ep.get("thumbnail_text", ""))
+    if not 2 <= len(tt) <= 5:
+        problems.append(f"thumbnail_text has {len(tt)} words, expected 2 to 5")
+
+    # series = playlist (world/series.json)
+    try:
+        allowed = load_series()["series"]
+    except Exception:
+        allowed = {}
+    if allowed and ep.get("series") not in allowed:
+        problems.append("series must be one of: " + ", ".join(allowed))
+
+    # tomorrow: name the next figure in the outro, and keep yesterday's promise
+    nxt = ep.get("next_story") or {}
+    if not (isinstance(nxt, dict) and nxt.get("figure") and nxt.get("teaser")):
+        problems.append('missing field: next_story {"figure": ..., "teaser": ...} (tomorrow night\'s story)')
+    else:
+        if "tomorrow" not in " ".join(paras_plain[-3:]):
+            problems.append('outro must tease tomorrow ("Tomorrow night, ...") before "Good night."')
+        nf = " ".join(words(nxt["figure"]))
+        if nf == " ".join(words(figure)):
+            problems.append("next_story.figure must be a different figure from tonight's")
+        used = Path("world/greek_figures.csv")
+        if used.exists() and any(" ".join(words(r.get("myth_figure", ""))) == nf
+                                 for r in csv.DictReader(used.open(encoding="utf-8"))):
+            problems.append(f"next_story.figure {nxt['figure']} was already used")
+    promised = None
+    earlier = [p for p in sorted(Path("published").glob("*.json")) if p.stem < Path(path).stem]
+    if earlier:  # the episode just before this one
+        try:
+            promised = (json.loads(earlier[-1].read_text(encoding="utf-8")).get("next_story") or {}).get("figure")
+        except Exception:
+            pass
+    if promised and " ".join(words(promised)) != " ".join(words(figure)) and not ep.get("next_story_changed"):
+        problems.append(f"last night promised {promised} for tonight; tell that figure, or explain in next_story_changed")
 
     # teller not repeated within 7 days
     log = Path("world/story_log.csv")

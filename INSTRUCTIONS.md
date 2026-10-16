@@ -30,11 +30,12 @@ Khalid's notes (2026-10-08, 2026-10-15): a pleasant mood with nothing behind it 
 - **Plain, human words.** No AI-sounding phrases (tapestry, nestled, embrace, a sense of...).
 
 ## 4. Shape of every episode
+0. Cold open (about 20 seconds): the strangest thing about tonight's myth and a promise ("by the end you will know..."). It is also cut into the day's 30-second Short.
 1. Intro: "Welcome to Fernwick Nights." + tonight's title, that it is a story from the Greek myths (worded freshly each night), the teller + one "get comfortable" line.
 2. Hook (100 to 150 words), then context (100 to 150 words), then backstory woven in.
 3. The story, 16 to 22 short paragraphs, 4 to 6 named chapters.
 4. A shorter, slower second telling ("Once More, Slowly").
-5. Outro from the teller, ending exactly "Good night." Then ambience plays alone.
+5. Outro from the teller, with "Tomorrow night, ..." naming the next figure, ending exactly "Good night." Then ambience plays alone.
 Total about 1,750 to 2,150 words. The full spec, JSON fields and voice list are in `prompts/daily-story.md`.
 
 ## 5. Variety rules
@@ -63,6 +64,8 @@ Build files are deleted after 1 to 2 days.
 | Fernwick Guide (the retired Fernwick-town tales) | `world/guide.md` |
 | Story log | `world/story_log.csv` |
 | Quality checks | `scripts/qc.py` |
+| Series and playlists | `world/series.json` |
+| Manual YouTube Studio steps, API audit | `docs/youtube-studio-steps.md` |
 | Build and upload | `.github/workflows/build-episode.yml` |
 | Logo and banner | `assets/brand/` |
 
@@ -71,3 +74,4 @@ Build files are deleted after 1 to 2 days.
 - 2026-10-08: Every story needs a hook, context and rich description. A different wise teller each night, speaking to the listener. Concrete, exact sensory detail in every scene.
 - 2026-10-15: Pivot to Greek mythology (Khalid: the Fernwick tales got no traction). Every story from 2026-10-15 is one Greek figure most listeners have not met, interesting, with a strong hook, told calmly for sleep by a different wise teller. Same channel, name, logo, intro and outro. Fernwick-town tales retired. Myth told as story, never worship. Never repeat a figure.
 - 2026-10-16: Never say "lesser known" (Khalid). Stories must hook listeners and keep them: an open question in the hook, a gentle mystery through the middle, a reveal in each chapter and a satisfying payoff before the calm wind-down. Series renamed "Greek Myths for Sleep".
+- 2026-10-16 (growth, Khalid: "Do all"): a ~20 s cold open with a promise before the welcome, paid off in the second half; curiosity first title ("The Queen Who Tricked a God | Metis | ..."); bold thumbnails; a 30 s teaser Short from the cold open; every episode in a series playlist (world/series.json) plus "Greek Myths for Sleep"; the outro teases tomorrow's figure, which the next night must tell; a pinned comment with tomorrow's story; a warmer, slower voice with the background sound fading in under it. Manual YouTube steps: docs/youtube-studio-steps.md.
