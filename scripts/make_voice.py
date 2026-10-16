@@ -3,7 +3,7 @@
 Usage: python scripts/make_voice.py queue/2026-10-08.json
 The voice is the episode's "voice" field (one of common.VOICES, chosen to fit the teller); env VOICE overrides it.
 Pacing aims at about 110 words a minute overall: a slowed voice plus a rest after every paragraph.
-Env: RATE_FIRST (default -22%), RATE_SECOND (default -32%).
+Env: RATE_FIRST (default -24%), RATE_SECOND (default -34%), PITCH (default -3Hz: a slightly lower, warmer voice).
 Also writes out/chapters.json: the start time of each [[CHAPTER Name]] in the finished episode.
 """
 import asyncio
@@ -15,8 +15,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from common import DEFAULT_VOICE, LEAD, OUT, VOICES, duration, load_episode, parse_script, run  # noqa: E402
 
-RATE_FIRST = os.environ.get("RATE_FIRST", "-22%")
-RATE_SECOND = os.environ.get("RATE_SECOND", "-32%")
+RATE_FIRST = os.environ.get("RATE_FIRST", "-24%")
+RATE_SECOND = os.environ.get("RATE_SECOND", "-34%")
+PITCH = os.environ.get("PITCH", "-3Hz")  # a little lower = warmer and calmer (Khalid, 2026-10-16)
 GAP_FIRST, GAP_SECOND = 1.4, 2.0  # rest after each spoken paragraph
 
 
@@ -33,7 +34,7 @@ async def speak(text, rate, path, tries=4, voice=None):
         if i == tries - 1 and v != DEFAULT_VOICE:
             v = DEFAULT_VOICE  # last try: the voice that has always worked
         try:
-            await edge_tts.Communicate(text, v, rate=rate).save(str(path))
+            await edge_tts.Communicate(text, v, rate=rate, pitch=PITCH).save(str(path))
             if Path(path).exists() and Path(path).stat().st_size > 500:
                 return
         except Exception as e:  # dropped connection, NoAudioReceived

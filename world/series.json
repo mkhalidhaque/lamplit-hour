@@ -1,0 +1,13 @@
+{
+  "_about": "Series = YouTube playlists. Every episode goes in the umbrella playlist plus the one series it names in its 'series' field. youtube_upload.py finds each playlist by its exact title on the channel, or creates it, then adds the video. playlist_id can be filled in by hand to skip the lookup.",
+  "umbrella": {"title": "Greek Myths for Sleep", "description": "Every Fernwick Nights story: one Greek myth a night, told slowly and calmly for falling asleep.", "playlist_id": ""},
+  "series": {
+    "Myths of the Sea": {"description": "Sleep stories of sea nymphs, islands, sailors, kingfishers and calm water.", "playlist_id": ""},
+    "Myths of the Night Sky": {"description": "Sleep stories of the stars, the moon and the constellations, and how they got there.", "playlist_id": ""},
+    "Myths of Sleep and Dreams": {"description": "Sleep stories of Hypnos, Nyx, the dream-bringers and the river of forgetting, told gently.", "playlist_id": ""},
+    "Myths of Love and Loyalty": {"description": "Sleep stories of couples, friends and families who stayed true.", "playlist_id": ""},
+    "Myths of Changing Shape": {"description": "Sleep stories of people who became flowers, trees, birds and springs.", "playlist_id": ""},
+    "Myths of Clever Mortals": {"description": "Sleep stories of ordinary people who outwitted, outworked or out-waited the gods.", "playlist_id": ""},
+    "Myths of Gifts and Wonders": {"description": "Sleep stories of strange gifts, enchanted objects and the places they came from.", "playlist_id": ""}
+  }
+}

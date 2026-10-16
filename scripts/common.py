@@ -29,6 +29,17 @@ def load_episode(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+def load_series():
+    """world/series.json: the umbrella playlist and the series (playlists) an episode can belong to."""
+    return json.loads(Path("world/series.json").read_text(encoding="utf-8"))
+
+
+def short_title(ep):
+    """The curiosity part of the main title, before any ' | ' (e.g. 'The Queen Who Tricked a God')."""
+    t = (ep.get("title_options") or [ep.get("story_title", "")])[0]
+    return t.split(" | ")[0].strip()
+
+
 def run(cmd):
     """Run a command, show the tail of stderr if it fails."""
     r = subprocess.run(cmd, capture_output=True, text=True)
