@@ -33,7 +33,7 @@ Check every detail against the ancient sources before writing; these notes are r
 ## Earth, gardens and craft
 - **The Hesperides**: daughters of evening who tend the golden apples in a garden at the western edge of the world, with Atlas holding up the sky nearby (Hesiod, Theogony 215; Apollodorus 2.5.11). Care: the serpent Ladon is a sleepy guardian, never a fight.
 - **Clytie**: the nymph who watched the sun cross the sky for nine days until she became a flower that turns to follow it (Ovid, Met. 4). Care: skip or soften what happened to Leucothoe.
-- **Philemon and Baucis**: a poor old couple who welcome two strangers (Zeus and Hermes); the wine jug keeps refilling; they ask never to be parted and become an oak and a linden side by side (Ovid, Met. 8). Care: leave out the flood of the neighbors' valley or tell it as a lake appearing; their wish is told without temples.
+- **Philemon and Baucis** (USED 2026-10-16): a poor old couple who welcome two strangers (Zeus and Hermes); the wine jug keeps refilling; they ask never to be parted and become an oak and a linden side by side (Ovid, Met. 8). Care: leave out the flood of the neighbors' valley or tell it as a lake appearing; their wish is told without temples.
 - **Amalthea**: the goat who fed the infant Zeus in a cave on Crete; one horn became the horn of plenty, and she became the star Capella (Hyginus; Ovid, Fasti 5).
 - **Melissa**: the nymph who fed baby Zeus honey and gave her name to bees.
 - **Aristaeus**: the shepherd-beekeeper who lost his bees and had to catch Proteus to learn why (Virgil, Georgics 4; Apollodorus).
