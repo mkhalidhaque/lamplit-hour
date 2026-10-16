@@ -1,4 +1,4 @@
-# Lesser-known Greek myth ideas (Fernwick Nights, from 2026-10-15)
+# Greek myth ideas (Fernwick Nights, from 2026-10-15)
 
 A starter list for the daily story. Pick freely, add new ideas, and write "USED <date>" after a figure once told
 (world/greek_figures.csv is the real record; qc.py checks it). "Care" notes say which part to soften or skip.

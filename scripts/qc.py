@@ -4,7 +4,8 @@ Usage: python scripts/qc.py queue/2026-10-08.json
 Checks: length, pause markers, banned AI-sounding phrases, alarm words, religion words,
 the spoken intro (title, teller), chapters, teller/listener/voice fields,
 an opening hook and grounding context, enough sensory description,
-similarity to earlier episodes, and (since 2026-10-15, lesser-known Greek myths) the myth figure:
+similarity to earlier episodes, the never-say phrases in every field, the open question and its payoff,
+and (since 2026-10-15, Greek myths) the myth figure:
 named in every title, sources given, and never used before (world/greek_figures.csv).
 """
 import csv
@@ -20,6 +21,8 @@ from common import CHAPTER_RE, SECOND_MARKER, VOICES, load_episode, plain_text  
 WORDS_MIN, WORDS_MAX = 1650, 2200  # ~15-20 min at ~110 words a minute, plus ambience tail
 BANNED = ["tapestry", "symphony", "embrace", "testament", "nestled", "whisper of", "a sense of",
           "as if the world itself", "little did", "in the heart of", "bustling", "delve", "journey of", "magical"]
+# Khalid, 2026-10-16: never call a figure or story "lesser known" (checked in the script and every text field)
+NEVER_SAY = ["lesser known", "little known", "obscure"]
 ALARM = ["scream", "blood", "crash", "gun", "monster", "died", "dead", "suddenly", "shadowy figure", "explod",
          "thunderclap", "terrified", "panic", "knife", "danger", "attack", "storm raged"]
 RELIGION = ["prayer", "pray", "church", "chapel", "cathedral", "mosque", "synagogue", "scripture", "bible",
@@ -128,6 +131,17 @@ def main(path):
         found = {w for w in key if w in opening.split()}
         if len(found) < 0.6 * len(key):
             problems.append("hook: the story must open with the hook (most of its words belong in the first 150 words)")
+    # keep them listening (Khalid, 2026-10-16): an open question the story carries, answered by a payoff
+    if not ep.get("open_question"):
+        problems.append("missing field: open_question (the question the hook plants and the story answers)")
+    payoff = ep.get("payoff", "")
+    if not payoff:
+        problems.append("missing field: payoff (how the open question is answered in the first telling)")
+    else:
+        story = " ".join(words(plain_text(first)))
+        key = {w for w in words(payoff) if len(w) > 3}
+        if key and len({w for w in key if w in story.split()}) < 0.6 * len(key):
+            problems.append("payoff: the first telling must actually answer the open question (most payoff words belong in it)")
     if not ep.get("context"):
         problems.append("missing field: context (who, where and why it matters, set up in the first two paragraphs)")
     if re.match(r"(it is|it was) (the )?(a |an )?\w*\s?(evening|night|morning|middle of|early|late)", opening):
@@ -172,7 +186,7 @@ def main(path):
     # the myth figure (Khalid, 2026-10-15): searchable titles, real sources, never the same figure twice
     figure = (ep.get("myth_figure") or "").strip()
     if not figure:
-        problems.append("missing field: myth_figure (tonight's lesser-known Greek figure)")
+        problems.append("missing field: myth_figure (tonight's Greek figure)")
     else:
         fig = " ".join(words(figure))
         for t in ep.get("title_options", []):
@@ -211,6 +225,21 @@ def main(path):
               "source_tradition", "source_note"):
         if not ep.get(f):
             problems.append(f"missing field: {f}")
+
+    # never-say phrases anywhere: script, titles, description, tags, series, thumbnail, excerpt...
+    def strings(v):
+        if isinstance(v, str):
+            yield v
+        elif isinstance(v, dict):
+            for x in v.values():
+                yield from strings(x)
+        elif isinstance(v, list):
+            for x in v:
+                yield from strings(x)
+    alltext = " " + " ".join(words(" ".join(strings(ep)).replace("-", " "))) + " "
+    h = [w for w in NEVER_SAY if f" {w} " in alltext]
+    if h:
+        problems.append("never-say phrases (Khalid): " + ", ".join(h))
 
     print(f"QC for {path}: {n} words")
     for line in notes:
