@@ -42,7 +42,7 @@ def description(ep):
         f"{ep['description_summary']}\n\n{told}{ep['description_setting']}\n\n"
         f"{chapter_lines()}"
         f"{sources}"
-        "Fernwick Nights: a lesser-known tale from the Greek myths every night, told slowly and calmly "
+        "Fernwick Nights: a story from the Greek myths every night, told slowly and calmly "
         "by a different storyteller, for falling asleep.\n\n"
         "Narration is an AI voice. Each retelling is an original work written for Fernwick Nights from the "
         "ancient, public-domain sources.\n\n"

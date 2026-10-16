@@ -5,7 +5,7 @@ Claude reads this before every daily story. When Khalid gives new direction, add
 
 ## 1. The channel
 - **Name:** Fernwick Nights (handle @fernwicknights). The repo keeps its old name, `lamplit-hour`.
-- **What it is (from 2026-10-15):** lesser-known Greek myths retold slowly and calmly as bedtime stories for grown-ups, a different little-known figure each night (Clytie, Hypnos, the Hesperides, Philoctetes...). One new video a day, 15 to 20 minutes, then quiet ambience. The earlier Fernwick-town tales (Oct 7 to 14) stay up but are no longer made.
+- **What it is (from 2026-10-15):** Greek myths retold slowly and calmly as bedtime stories for grown-ups, a different figure each night, chosen from the ones most people have not met yet (Clytie, Hypnos, the Hesperides, Philoctetes...). One new video a day, 15 to 20 minutes, then quiet ambience. The earlier Fernwick-town tales (Oct 7 to 14) stay up but are no longer made.
 - **Look and sound:** one dark, warm painted scene from the myth with one flickering light, the fern-and-lantern logo stamped on frame, thumbnail and Short; a free edge-tts voice; rain, wind, ocean, harbor or stove ambience.
 - **Goal:** daily uploads at $0 cost, fully automated, growing toward monetization.
 
@@ -18,17 +18,19 @@ Claude reads this before every daily story. When Khalid gives new direction, add
 
 ## 3. What makes a good story
 Khalid's notes (2026-10-08, 2026-10-15): a pleasant mood with nothing behind it is not enough; the figure must be interesting.
-- **A lesser-known figure.** Not the household names (Zeus, Athena, Heracles, Odysseus, Medusa...); they may appear on the side. Never the same figure twice (`world/greek_figures.csv`).
+- **A fresh figure.** Not the household names (Zeus, Athena, Heracles, Odysseus, Medusa...); they may appear on the side. Never the same figure twice (`world/greek_figures.csv`).
 - **Hook first.** Right after the intro, the striking question or fact about tonight's figure (why does a flower follow the sun all day?). Never open with the date or the weather. Answer it by the middle.
 - **Context up front.** Who the figure is, their family and home, where in the Greek world, and how they touch a myth the listener already knows.
 - **Real substance.** What the ancient writers say, how versions differ, what survives today (a star, a flower, a word). Accurate.
 - **Rich, exact description.** Every scene has a sound, a smell or taste, a texture, a temperature and precise sights. "Three apples, gold as late sun, one with a leaf still on its stem", not "some apples".
 - **A wise teller.** Each night someone different (an old shepherd, a net-mender on a harbor wall, a beekeeper on a mountain of thyme) tells the myth to "you", with a few asides of their own.
 - **Energy only goes down.** Sentences get shorter and softer; more pauses in the last third; the character settles to sleep.
+- **Keep them listening (Khalid, 2026-10-16).** The hook opens a question the listener wants answered; a gentle mystery runs through the story; each chapter adds a small reveal or surprise; the answer lands as a satisfying payoff before the last third, then everything winds down.
+- **Never say "lesser known"** (or lesser-known, little-known, obscure) anywhere: script, titles, description, tags, series, docs. qc.py blocks it.
 - **Plain, human words.** No AI-sounding phrases (tapestry, nestled, embrace, a sense of...).
 
 ## 4. Shape of every episode
-1. Intro: "Welcome to Fernwick Nights." + tonight's title, "a lesser-known tale from the Greek myths", the teller + one "get comfortable" line.
+1. Intro: "Welcome to Fernwick Nights." + tonight's title, that it is a story from the Greek myths (worded freshly each night), the teller + one "get comfortable" line.
 2. Hook (100 to 150 words), then context (100 to 150 words), then backstory woven in.
 3. The story, 16 to 22 short paragraphs, 4 to 6 named chapters.
 4. A shorter, slower second telling ("Once More, Slowly").
@@ -67,4 +69,5 @@ Build files are deleted after 1 to 2 days.
 ## 8. Decision log
 - 2026-10-07: Channel named Fernwick Nights. World Fernwick and the Fernwick Guide approved. Free voice. 15 to 20 minute videos. Pipeline in GitHub Actions. Daily story, Claude chooses. No organized religion; mythology allowed. Never say "bible". Cozy-spooky season Oct 17 to 31. Long stories split into parts.
 - 2026-10-08: Every story needs a hook, context and rich description. A different wise teller each night, speaking to the listener. Concrete, exact sensory detail in every scene.
-- 2026-10-15: Pivot to lesser-known Greek mythology (Khalid: the Fernwick tales got no traction). Every story from 2026-10-15 is one little-known Greek figure, interesting, with a strong hook, told calmly for sleep by a different wise teller. Same channel, name, logo, intro and outro. Fernwick-town tales retired. Myth told as story, never worship. Never repeat a figure.
+- 2026-10-15: Pivot to Greek mythology (Khalid: the Fernwick tales got no traction). Every story from 2026-10-15 is one Greek figure most listeners have not met, interesting, with a strong hook, told calmly for sleep by a different wise teller. Same channel, name, logo, intro and outro. Fernwick-town tales retired. Myth told as story, never worship. Never repeat a figure.
+- 2026-10-16: Never say "lesser known" (Khalid). Stories must hook listeners and keep them: an open question in the hook, a gentle mystery through the middle, a reveal in each chapter and a satisfying payoff before the calm wind-down. Series renamed "Greek Myths for Sleep".
