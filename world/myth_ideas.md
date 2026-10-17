@@ -7,8 +7,8 @@ Check every detail against the ancient sources before writing; these notes are r
 ## Night, sleep and dreams (good any night; best for 17 to 31 October)
 - **Hypnos** (Sleep): lives in a cave where the sun never reaches, poppies at the door, the river Lethe murmuring past, no rooster, no dog, no creaking gate (Ovid, Metamorphoses 11). In the Iliad (14) Hera talks him into putting Zeus to sleep; he agrees only after she promises him one of the Graces, Pasithea, for a wife. Gentle humor.
 - **Morpheus and the Oneiroi**: the sons of Sleep who carry dreams; Morpheus can copy any human face and voice (Ovid, Met. 11). Dreams come through two gates, one of horn (true) and one of ivory (false) (Odyssey 19).
-- **Nyx** (Night): so old and respected that even Zeus did not want to upset her (Iliad 14). Her house at the edge of the world, where she and her daughter Hemera (Day) greet each other on the bronze threshold as one goes out and the other comes in (Hesiod, Theogony 744-757).
-- **Hemera** (Day), see Nyx. A lovely two-sided story of mother and daughter who never share the house.
+- **Nyx** (Night) (USED 2026-10-17): so old and respected that even Zeus did not want to upset her (Iliad 14). Her house at the edge of the world, where she and her daughter Hemera (Day) greet each other on the bronze threshold as one goes out and the other comes in (Hesiod, Theogony 744-757).
+- **Hemera** (Day), see Nyx (touched on 2026-10-17; could still get her own story). A lovely two-sided story of mother and daughter who never share the house.
 - **Lethe**: the river of forgetting in the underworld; its water brings rest. Told as landscape, not as afterlife belief.
 - **Asteria**: Titan goddess of falling stars; she leapt into the sea as a quail and became a floating island, later Delos, where Leto finally found a place to rest (Hesiod, Theogony 409; Apollodorus 1.4.1; Callimachus, Hymn to Delos). Care: she was fleeing Zeus; say only that she did not wish to be found.
 
